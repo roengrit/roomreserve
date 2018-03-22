@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="/static/css/daterange/daterangepicker.css">
   <link rel="stylesheet" href="/static/css/datepicker/bootstrap-datepicker.css">
   <link rel="stylesheet" href="/static/css/timepicker/bootstrap-timepicker.min.css">
-  <link rel="stylesheet" href="/static/css/select2/select2.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/AdminLTE.min.css">
   <link rel="stylesheet" href="/static/css/skins/_all-skins.min.css"> {{.html_head}}
   <link rel="stylesheet" href="/static/css/room.css">
@@ -39,10 +39,10 @@
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
             <ul class="nav navbar-nav">
-              <li class="active">
-                <a href="/">ค้นหาห้องว่าง</a>
+              <li class="{{.home}}">
+                <a href="/">จองห้องประชุม</a>
               </li>
-              <li>
+              <li class="{{.calendar}}">
                 <a href="/calendar">ปฏิทิน</a>
               </li>
               <li class="dropdown">
@@ -50,8 +50,9 @@
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
+                    {{if .username}}
                   <li>
-                    <a href="#">ห้องประชุม</a>
+                    <a href="/room">ห้องประชุม</a>
                   </li>
                   <li>
                     <a href="#">ผู้ใช้งาน</a>
@@ -59,10 +60,21 @@
                   <li>
                     <a href="#">สิทธิ์</a>
                   </li>
+                 
+                  {{end}}
+                  {{if not .username}}
+                    <li>
+                      <a href="/login">เข้าสู่ระบบ</a>
+                    </li>
+                  {{else}}
                   <li class="divider"></li>
                   <li>
-                    <a href="#">เข้าสู่ระบบ</a>
+                    <a href="#">โปรไฟล์</a>
                   </li>
+                  <li>
+                    <a href="/logout">ออกจากระบบ</a>
+                  </li>
+                  {{end}}
                 </ul>
               </li>
             </ul>
@@ -87,17 +99,14 @@
     </div>
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
-    <script src="/static/js/select2/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="/static/js/jquery.slimscroll.min.js"></script>
     <script src="/static/js/fastclick.js"></script>
     <script src="/static/js/moment/moment.js"></script>
     <script src="/static/js/daterange/daterangepicker.js"></script>
     <script src="/static/js/timepicker/js/bootstrap-timepicker.js"></script>
     <script src="/static/js/adminlte.min.js"></script>
-    <script src="/static/js/room.js"></script> {{.scripts}}
-    <script>
-
-    </script>
+    <script src="/static/js/room.js"></script>
+     {{.scripts}}
 </body>
-
 </html>

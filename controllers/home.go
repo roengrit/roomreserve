@@ -1,6 +1,10 @@
 package controllers
 
-import "github.com/astaxie/beego"
+import (
+	"roomreserve/helpers"
+
+	"github.com/astaxie/beego"
+)
 
 //HomeController _
 type HomeController struct {
@@ -9,7 +13,9 @@ type HomeController struct {
 
 //Get Home
 func (c *HomeController) Get() {
-	c.Data["title"] = "ค้นหาห้องว่าง"
+	c.Data["title"] = "จองห้องประชุม"
+	c.Data["home"] = "active"
+	c.Data["username"] = helpers.GetUser(c.Ctx.Request)
 	c.Layout = "layout.html"
 	c.TplName = "home/index.html"
 	c.LayoutSections = make(map[string]string)

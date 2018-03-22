@@ -76,7 +76,7 @@ func GetUser(username string) (userRet User, errRet error) {
 func GetUserByID(ID int) (user *User, errRet error) {
 	o := orm.NewOrm()
 	userGet := &User{}
-	o.QueryTable("users").Filter("ID", ID).RelatedSel().One(userGet)
+	o.QueryTable("user").Filter("ID", ID).RelatedSel().One(userGet)
 	if nil != userGet {
 		userGet.Password = ""
 	} else {
@@ -89,7 +89,7 @@ func GetUserByID(ID int) (user *User, errRet error) {
 func GetUserByUserName(username string) (user *User, errRet error) {
 	userGet := &User{}
 	o := orm.NewOrm()
-	o.QueryTable("users").Filter("Username", username).RelatedSel().One(userGet)
+	o.QueryTable("user").Filter("Username", username).RelatedSel().One(userGet)
 	if nil != userGet {
 		userGet.Password = ""
 	} else {
@@ -151,4 +151,17 @@ func RandStringRunes(n int) string {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
+}
+
+//CheckUser _
+func CheckUser(username string) (ok bool, errRet error) {
+	o := orm.NewOrm()
+	user := User{Username: username}
+	errRet = o.Read(&user, "Username")
+	ok = true
+	if errRet == orm.ErrNoRows {
+		errRet = errors.New("ไม่พบผู้ใช้งานนี้ในระบบ")
+		ok = false
+	}
+	return ok, errRet
 }

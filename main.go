@@ -30,7 +30,12 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	beego.Router("/login", &c.UserController{})
+	beego.Router("/change-pass", &c.UserController{}, "get:ChangePass;post:UpdatePass")
+	beego.Router("/logout", &c.LogoutController{})
+	beego.Router("/forget-password", &c.ForgetController{})
 	beego.Router("/", &c.HomeController{})
 	beego.Router("/calendar", &c.CalenendarController{})
+	beego.Router("/room", &c.RoomController{})
 	beego.Run()
 }
