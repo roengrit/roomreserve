@@ -9,6 +9,7 @@
 
   <!-- Site Properties -->
   <title>{{.title}}</title>
+  <link rel="icon" href="/static/images/favicon.png">
 
   <link rel="stylesheet" type="text/css" href="/static/components/reset.css">
   <link rel="stylesheet" type="text/css" href="/static/components/site.css">
@@ -24,39 +25,47 @@
   <link rel="stylesheet" type="text/css" href="/static/components/segment.css">
   <link rel="stylesheet" type="text/css" href="/static/components/dropdown.css">
   <link rel="stylesheet" type="text/css" href="/static/components/icon.css">
+
+  <link rel="stylesheet" type="text/css" href="/static/css/fullcalendar.min.css">
+
+  <link rel="stylesheet" type="text/css" href="/static/css/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/room.css">
+
+  <link href="https://fonts.googleapis.com/css?family=Athiti|Kanit" rel="stylesheet">
+
+  <script src="/static/js/moment.min.js"></script>
+  <script src="/static/js/jquery-3.3.1.min.js"></script>
+  <script src="/static/js/fullcalendar.js"></script>
+  <script src="/static/js/th.js"></script>
+  <script src="/static/js/semantic.min.js"></script>
+  <script src="/static/js/calendar.min.js"></script>
+
 </head>
 
-<body>
+<body style="font-family: 'Athiti', sans-serif;font-size:20px;">
   <div class="ui borderless main menu fixed" style="position: fixed; top: 0px; left: auto; z-index: 10;">
     <div class="ui text container">
-      <div class="header item">
+      <div class="header item" style="font-family: 'Athiti', sans-serif;font-size:17px;">
         <span>R</span>
         <i class="circle outline icon"></i>
-        <i style="margin-left:-10px;" class="circle outline icon"></i>
+        <i style="margin-left:-15px;" class="circle outline icon"></i>
         <span style="margin-left:-5px;">M</span>
       </div>
-      <a href="#" class="item">ห้องประชุม</a>
-      <a href="#" class="item">ปฏิทิน</a>
-      <div class="ui simple dropdown right item">
-          อื่นๆ <i class="dropdown icon"></i>
-          <div class="menu">
-            <a class="item" href="#">Link Item</a>
-            <a class="item" href="#">Link Item</a>
-            <div class="divider"></div>
-            <div class="header">Header Item</div>
-            <div class="item">
-              <i class="dropdown icon"></i>
-              Sub Menu
-              <div class="menu">
-                <a class="item" href="#">Link Item</a>
-                <a class="item" href="#">Link Item</a>
-              </div>
-            </div>
-            <a class="item" href="#">Link Item</a>
-          </div>
+      <a href="#" class="item active" style="font-family: 'Athiti', sans-serif;font-size:17px;">เช็คห้องว่าง</a>
+      <a href="#" class="item " style="font-family: 'Athiti', sans-serif;font-size:17px;">ปฏิทิน</a>
+      <div class="ui simple dropdown item" style="font-family: 'Athiti', sans-serif;font-size:17px;">
+        อื่นๆ
+        <i class="dropdown icon"></i>
+        <div class="menu   left    ">
+          <a class="item" href="#">เข้าสู่ระบบ</a>
+          <a class="item" href="#">ห้องประชุม</a>
+          <a class="item" href="#">ผู้ใช้งาน</a>
+          <a class="item" href="#">สิทธิ์</a>
         </div>
+      </div>
     </div>
   </div>
+  {{.LayoutContent}}
 </body>
 
 </html>

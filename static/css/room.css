@@ -1,0 +1,9 @@
+.ui.text.container{
+    width: 100%;
+    max-width :100%!important;
+}
+
+.ui.container{
+    width: 90%;
+    max-width :90%!important;
+}
