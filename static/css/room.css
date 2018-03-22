@@ -1,9 +1,6 @@
-.ui.text.container{
-    width: 100%;
-    max-width :100%!important;
+.skin-black-light .main-header .navbar .navbar-nav>li>a{
+    border-right: none;
 }
-
-.ui.container{
-    width: 90%;
-    max-width :90%!important;
+.skin-black-light .main-header .navbar-brand{
+    border-right: none;
 }

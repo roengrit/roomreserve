@@ -9,8 +9,10 @@ type HomeController struct {
 
 //Get Home
 func (c *HomeController) Get() {
-	c.Data["title"] = "หน้าหลัก"
+	c.Data["title"] = "ค้นหาห้องว่าง"
 	c.Layout = "layout.html"
 	c.TplName = "home/index.html"
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["scripts"] = "home/index-js.html"
 	c.Render()
 }

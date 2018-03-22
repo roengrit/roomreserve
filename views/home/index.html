@@ -1,47 +1,103 @@
 <style>
-	.link {
-		cursor: pointer;
+	.content-wrapper {
+		background-color: white;
 	}
 </style>
-<div class="ui container" style="margin-top:100px;">
-	<form class="ui form">
-		<div class="ui calendar" id="begin-date">
-			<div class="ui input left icon">
-				<i class="calendar icon"></i>
-				<input type="text" placeholder="Date/Time">
+<form action="/">
+	<div class="row" style="margin-top:70px;">
+		<div class="col-xs-4">
+			<div class="input-group">
+				<div class="input-group-addon">
+					<i class="fa fa-calendar-o"></i>
+				</div>
+				<input type="text" class="form-control datepicker" data-provide="datepicker" data-date-language="th-th" id="reservationtime">
 			</div>
 		</div>
-	</form>
-</div>
-<script>
-	$('#begin-date,#end-date').calendar({
-		text: {
-			days: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
-			months: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
-			monthsShort: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
-			today: 'Today',
-			now: 'Now',
-			ampm: false
-		},
-		formatter: {
-			date: function (date, settings) {
-				if (!date) return '';
-				var day = date.getDate() + '';
-				if (day.length < 2) {
-					day = '0' + day;
-				}
-				var month = (date.getMonth() + 1) + '';
-				if (month.length < 2) {
-					month = '0' + month;
-				}
-				var year = date.getFullYear();
-				return day + '/' + month + '/' + (year + 543);
-			},
-			yearHeader: function (date, settings) {
-				 return '' + (date.getFullYear() + 543);
-			} 
-			  
-		}
+		<div class="col-xs-2">
+			<div class="input-group ">
+				<div class="input-group-addon">
+					<i class="fa fa-clock-o"></i>
+				</div>
+				<input type="text" id="timeBegin" class="form-control">
+			</div>
+		</div>
+		<div class="col-xs-4">
+			<div class="input-group">
+				<div class="input-group-addon">
+					<i class="fa fa-calendar-o"></i>
+				</div>
+				<input type="text" class="form-control datepicker" data-provide="datepicker" data-date-language="th-th" id="s">
+			</div>
+		</div>
+		<div class="col-xs-2">
+			<div class="input-group">
+				<div class="input-group-addon">
+					<i class="fa fa-clock-o"></i>
+				</div>
+				<input type="text" id="timeEnd" class="form-control">
 
-	});
-</script>
+			</div>
+		</div>
+	</div>
+	<div class="row " style="margin-top:10px;text-align:center;padding-left:15px;padding-right:15px;">
+		<section class="select2">
+			<option selected="selected" value="">เลือกห้อง</option>
+		</section>
+	</div>
+	<div class="row" style="margin-top:10px;text-align:center;">
+		<button type="submit" class="btn btn-primary">
+			<i class="fa fa-filter"> </i> ค้นหา</button>
+		<button type="reset" class="btn btn-default">
+			<i class="fa fa-remove"> </i> ล้าง</button>
+	</div>
+	<div class="row" style="margin-top:70px;">
+		<div class="box-body table-responsive no-padding">
+			<table class="table table-hover">
+				<tr>
+					<th>รายละเอียด</th>
+					<th>#</th>
+				</tr>
+				<tr>
+					<td valign="top" style=" cursor: pointer;">
+						<div class="media">
+							<div class="media-left">
+								<img src="/static/image/no-image.jpg" style="width: 100px;">
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading">123/4ก.56</h4>
+								<p>
+									<strong>จำนวนที่นั่ง </strong>1
+									<strong>ที่นั่ง</strong>
+									<br>
+									<strong>อาคาร/สถานที่ </strong>อาคาร 1 @ชั้น 1.1, ผู้ดูแลห้อง: 1.น.ส.พิรารัตย์ เสียงใส&amp; 1.2น.ส.พอใจ พิสุทธิ์ </p>
+							</div>
+						</div>
+					</td>
+					<td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;color:#adb5bd">
+						<i class="fa  fa-angle-right fa-w-8 fa-3x"></i>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" style=" cursor: pointer;">
+						<div class="media">
+							<div class="media-left">
+								<img src="/static/image/no-image.jpg" style="width: 100px;">
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading">123/4ก.56</h4>
+								<p>
+									<strong>จำนวนที่นั่ง </strong>1
+									<strong>ที่นั่ง</strong>
+									<br>
+									<strong>อาคาร/สถานที่ </strong>อาคาร 1 @ชั้น 1.1, ผู้ดูแลห้อง: 1.น.ส.พิรารัตย์ เสียงใส&amp; 1.2น.ส.พอใจ พิสุทธิ์ </p>
+							</div>
+						</div>
+					</td>
+					<td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;color:#adb5bd">
+						<i class="fa  fa-angle-right fa-w-8 fa-3x"></i>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</form>

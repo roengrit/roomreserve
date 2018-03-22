@@ -31,5 +31,6 @@ func main() {
 		fmt.Println(err)
 	}
 	beego.Router("/", &c.HomeController{})
+	beego.Router("/calendar", &c.CalenendarController{})
 	beego.Run()
 }

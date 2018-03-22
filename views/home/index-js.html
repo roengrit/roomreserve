@@ -1,0 +1,19 @@
+<script src="/static/js/datepicker/bootstrap-datepicker.js"></script>
+<script src="/static/js/datepicker/bootstrap-datepicker-thai.js"></script>
+<script src="/static/js/datepicker/locales/bootstrap-datepicker.th.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            autoclose: true,
+            todayBtn: true,
+            orientation: "auto",
+            todayHighlight: true,
+            format: 'dd/mm/yyyy'
+        });
+         //Timepicker
+    $('#timeBegin,#timeEnd').timepicker({
+        use24hours: true
+    })
+        $('.select2').select2()
+    });
+</script>
