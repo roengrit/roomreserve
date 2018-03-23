@@ -44,12 +44,12 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:3%">
-                                    <a href="javascript:void(0)" style="color:#444"> <i class="fa fa-trash fa-w-0 fa-2x"></i></a>
-                            </td>
-                            <td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;;width:5%">
-                              <a href="/room?id=`+ dat.ID +`" style="padding:15px;color:#444">  <i class="fa  fa-angle-right fa-w-6 fa-3x"></i></a>
-                            </td>
+                            <td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%">
+                                    <div class="btn-group">
+                                            <a href="javascript:void(0)" class="btn btn-sm btn-danger"> <i class="fa fa-trash  fa-2x"></i></a>
+                                            <a href="/room?id=`+ dat.ID +`" class="btn btn-sm btn-default" >  <i class="fa  fa-angle-right  fa-2x"></i></a>
+                                    </div>
+                            </td> 
                         </tr>
                 `);
             });
