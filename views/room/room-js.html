@@ -1,0 +1,62 @@
+<script>
+    function Paging(page) {
+        $('#Page').val(page);
+        LoadData();
+    }
+    $('.change-perpage').click(function () {
+        $('#PerPage').val($(this).attr("top"));
+        if ($(this).attr("top") == '0') {
+            $('#PerPageLabel').html('ทั้งหมด');
+        } else {
+            $('#PerPageLabel').html($(this).html());
+        }
+        LoadData();
+    });
+    function ReSetForm() {
+        $('#BtnClear').trigger("click");
+        LoadData();
+    }
+    function LoadData() {
+        url = $('#ListForm').attr('action');
+        $('#RetData').fadeOut(100);
+        $.post(url, $('#ListForm').serialize(), function (data) {
+            $('#RetData').html('');
+            if (data.RoomList == null) {
+                $('#RetCount').html('ไม่มีข้อมูลที่ค้นหา');
+                return;
+            }
+            data.RoomList.forEach(dat => {
+                var imagePath = dat.ImagePath1 == '' || dat.ImagePath1 == undefined ? '/static/image/no-image.jpg' : dat.ImagePath1;
+                console.log(dat.ImagePath1);
+                $('#RetData').append(`
+                <tr>
+                            <td valign="top" style=" cursor: pointer;">
+                                <div class="media">
+                                    <div class="media-left" style="vertical-align:middle">
+                                        <img src="`+imagePath+`" style="width: 100px;">
+                                    </div>
+                                    <div class="media-body">
+                                        <h3 class="media-heading">`+ dat.Name+`</h3>
+                                        <p  >
+                                            <span  > <strong>จำนวนที่นั่ง &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.SupportText+` </span>
+                                            <br>
+                                            <strong >อาคาร/สถานที่ &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.LocationText   +`</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:3%">
+                                    <a href="javascript:void(0)" style="color:#444"> <i class="fa fa-trash fa-w-0 fa-2x"></i></a>
+                            </td>
+                            <td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;;width:5%">
+                              <a href="/room?id=`+ dat.ID +`" style="padding:15px;color:#444">  <i class="fa  fa-angle-right fa-w-6 fa-3x"></i></a>
+                            </td>
+                        </tr>
+                `);
+            });
+            $('#RetCount').html('ค้นเจอทั้งหมด ' + data.Page + ' รายการ');
+            $('#Pagination').html(data.Paging)
+            $('#RetData').fadeIn(100);
+        });
+    }
+    LoadData();
+</script>

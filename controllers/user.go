@@ -27,7 +27,8 @@ type ForgetController struct {
 //Get to view login
 func (c *UserController) Get() {
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
-	c.Data["username"] = "logon.firstclass@gmail.com"
+	c.Data["ref"] = c.Ctx.Request.URL.Query().Get("ref")
+	c.Data["username"] = "admin"
 	c.Data["title"] = "เข้าสู่ระบบเพื่อเริ่มการทำงาน"
 	c.TplName = "user/login.html"
 	c.Render()
@@ -37,10 +38,12 @@ func (c *UserController) Get() {
 func (c *UserController) Post() {
 	usernameForm := c.GetString("username")
 	passwordForm := c.GetString("password")
-
 	if ok, err := models.Login(usernameForm, passwordForm); ok {
 		user, _ := models.GetUserByUserName(usernameForm)
 		if ok, err = h.KeepLogin(c.Ctx.ResponseWriter, usernameForm, user.Role.ID); ok == true {
+			if c.GetString("ref") != "" {
+				c.Ctx.Redirect(http.StatusFound, c.GetString("ref"))
+			}
 			c.Ctx.Redirect(http.StatusFound, "/")
 		} else {
 			c.Data["error"] = err
@@ -48,7 +51,6 @@ func (c *UserController) Post() {
 	} else {
 		c.Data["error"] = err
 	}
-
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["username"] = c.GetString("username")
 	c.Data["title"] = "เข้าสู่ระบบเพื่อเริ่มการทำงาน"

@@ -37,5 +37,6 @@ func main() {
 	beego.Router("/", &c.HomeController{})
 	beego.Router("/calendar", &c.CalenendarController{})
 	beego.Router("/room", &c.RoomController{})
+	beego.Router("/room/list", &c.RoomController{}, "get:RoomList;post:GetRoomListJSON")
 	beego.Run()
 }

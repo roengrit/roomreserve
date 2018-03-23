@@ -1,0 +1,288 @@
+<style>
+    .form-group {
+        clear: both;
+        margin-bottom: 80px;
+    }
+
+    input.largerCheckbox {
+        width: 20px;
+        height: 20px;
+    }
+
+    .img-wrap {
+        position: relative;
+        display: inline-block;
+        font-size: 0;
+    }
+
+    .img-wrap .close-x {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 100;
+        background-color: transparent;
+        padding: 5px 5px 5px;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+        opacity: .2;
+        text-align: center;
+        font-size: 22px;
+        line-height: 10px;
+        border-radius: 50%;
+    }
+
+    .img-wrap:hover .close-x {
+        opacity: 1;
+    }
+</style>
+<link rel="stylesheet" href="static/css/gallory/gallory.css">
+<section class="content-header">
+    <div id="top-alert" style="display:none">
+    </div>
+    <h1 id="title-content">
+        {{.title}}
+    </h1>
+</section>
+<section class="content">
+    <form {{if .r }} {{else }} action="/room" {{end}} autocomplete="off" onsubmit="return false;" id="create-form" method="post">
+        {{ .xsrfdata }}
+        <input type="hidden" id="ID" name="ID" value="{{.m.ID}}" />
+        <div id="box-req" class="box box-primary">
+            <div class="box-body">
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">ชื่อ</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="Name" required name="Name" class="form-control" autocomplete="off" placeholder="ชื่อ" value="{{.m.Name}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">การรองรับ</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="SupportText" required name="SupportText" class="form-control" autocomplete="off" placeholder="การรองรับ"
+                                    value="{{.m.SupportText}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">สถานที่</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="LocationText" required name="LocationText" class="form-control" autocomplete="off" placeholder="สถานที่"
+                                    value="{{.m.LocationText}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">อุปกรณ์</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="AddOnDeviceText" required name="AddOnDeviceText" class="form-control" autocomplete="off" placeholder="อุปกรณ์"
+                                    value="{{.m.AddOnDeviceText}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">ผู้ดูแล/เบอร์โทร</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="RoomAdminText" required name="RoomAdminText" class="form-control" autocomplete="off" placeholder="ผู้ดูแล/เบอร์โทร"
+                                    value="{{.m.RoomAdminText}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <div class="checkbox icheck" style="padding-left:20px;">
+                                <label>
+                                    <input type="checkbox" class="largerCheckbox" name="Active" {{if.m.Active}}checked{{end}} value="True">
+                                </label>
+                                <label>เปิดใช้งาน</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-body" style="margin-top:-50px;">
+                    <div class="row">
+                        <div class="gallery">
+                             {{if .m.ImagePath1}}
+                            <figure class="img-wrap veiw-figure">
+                                <span class="close-x">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                <img src="{{.m.ImagePath1}}" alt="" />
+                                <figcaption>Daytona Beach
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{else}}
+                            <figure class="add-image" val="1">
+                                <img src="/static/image/600_x_400.png" alt="">
+                                <figcaption>Highlands
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{end}} 
+                            {{if .m.ImagePath2}}
+                            <figure class="img-wrap veiw-figure">
+                                <span class="close-x">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                <img src="{{.m.ImagePath2}}" alt="" />
+                                <figcaption>Daytona Beach
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{else}}
+                            <figure class="add-image" val="2">
+                                <img src="/static/image/600_x_400.png" alt="">
+                                <figcaption>Highlands
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{end}}
+                            {{if .m.ImagePath3}}
+                            <figure class="img-wrap veiw-figure">
+                                <span class="close-x">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                <img src="{{.m.ImagePath3}}" alt="" />
+                                <figcaption>Daytona Beach
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{else}}
+                            <figure class="add-image" val="3">
+                                <img src="/static/image/600_x_400.png" alt="">
+                                <figcaption>Highlands
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{end}}
+                            {{if .m.ImagePath4}}
+                            <figure class="img-wrap veiw-figure">
+                                <span class="close-x">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                <img src="{{.m.ImagePath4}}" alt="" />
+                                <figcaption>Daytona Beach
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{else}}
+                            <figure class="add-image" val="4">
+                                <img src="/static/image/600_x_400.png" alt="">
+                                <figcaption>Highlands
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{end}}
+                            {{if .m.ImagePath5}}
+                            <figure class="img-wrap veiw-figure">
+                                <span class="close-x">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                <img src="{{.m.ImagePath5}}" alt="" />
+                                <figcaption>Daytona Beach
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{else}}
+                            <figure class="add-image" val="5">
+                                <img src="/static/image/600_x_400.png" alt="">
+                                <figcaption>Highlands
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{end}}
+                            {{if .m.ImagePath6}}
+                            <figure class="img-wrap veiw-figure">
+                                <span class="close-x">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                <img src="{{.m.ImagePath6}}" alt="" />
+                                <figcaption>Daytona Beach
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{else}}
+                            <figure class="add-image" val="6">
+                                <img src="/static/image/600_x_400.png" alt="">
+                                <figcaption>Highlands
+                                    <small>United States</small>
+                                </figcaption>
+                            </figure>
+                            {{end}}
+                           
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display:none;">
+                            <symbol id="close" viewBox="0 0 18 18">
+                                <path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M9,0.493C4.302,0.493,0.493,4.302,0.493,9S4.302,17.507,9,17.507
+                                            S17.507,13.698,17.507,9S13.698,0.493,9,0.493z M12.491,11.491c0.292,0.296,0.292,0.773,0,1.068c-0.293,0.295-0.767,0.295-1.059,0
+                                            l-2.435-2.457L6.564,12.56c-0.292,0.295-0.766,0.295-1.058,0c-0.292-0.295-0.292-0.772,0-1.068L7.94,9.035L5.435,6.507
+                                            c-0.292-0.295-0.292-0.773,0-1.068c0.293-0.295,0.766-0.295,1.059,0l2.504,2.528l2.505-2.528c0.292-0.295,0.767-0.295,1.059,0
+                                            s0.292,0.773,0,1.068l-2.505,2.528L12.491,11.491z" />
+                            </symbol>
+                        </svg>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    {{if .r}} {{else}}
+                    <button type="submit" onclick="Save()" class="btn btn-primary pull-right">บันทึก</button>
+                    <a href="/room/list" class="btn btn-default pull-right" style="margin-right:3px;">ยกเลิก</a>
+                    {{end}}
+                </div>
+            </div>
+            <div class="modal fade" id="modal-default">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Default Modal</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>One fine body&hellip;</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+    </form>
+</section>

@@ -15,6 +15,7 @@ type BaseController struct {
 func (b *BaseController) Prepare() {
 	val := h.GetUser(b.Ctx.Request)
 	if val == "" {
-		b.Ctx.Redirect(302, "/login")
+		b.Ctx.Redirect(302, "/login?ref="+b.Ctx.Request.URL.Path)
 	}
+	b.Data["username"] = val
 }
