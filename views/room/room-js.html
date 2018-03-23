@@ -26,7 +26,7 @@
                 return;
             }
             data.RoomList.forEach(dat => {
-                var imagePath = dat.ImagePath1 == '' || dat.ImagePath1 == undefined ? '/static/image/no-image.jpg' : dat.ImagePath1;
+                var imagePath = dat.ImagePath1 == '' || dat.ImagePath1 == undefined ? '/static/image/600_x_400.png' : dat.ImagePath1;
                 console.log(dat.ImagePath1);
                 $('#RetData').append(`
                 <tr>
@@ -46,8 +46,8 @@
                             </td>
                             <td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%">
                                     <div class="btn-group">
-                                            <a href="javascript:void(0)" class="btn btn-sm btn-danger"> <i class="fa fa-trash  fa-2x"></i></a>
-                                            <a href="/room?id=`+ dat.ID +`" class="btn btn-sm btn-default" >  <i class="fa  fa-angle-right  fa-2x"></i></a>
+                                            <a href="javascript:void(0)" class="btn btn-sm btn-danger"> <i class="fa fa-trash  fa-1x"></i></a>
+                                            <a href="/room?id=`+ dat.ID +`" class="btn btn-sm btn-default" >  <i class="fa  fa-angle-right  fa-1x"></i></a>
                                     </div>
                             </td> 
                         </tr>

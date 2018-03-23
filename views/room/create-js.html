@@ -1,14 +1,11 @@
 <script>
-    $('.img-wrap .close-x').on('click', function() {
-    var id = $(this).closest('.img-wrap').find('img').attr('id');
-    console.log(id)
-    return false;
-   });
+  
    popup = {
   init: function(){
     $('.veiw-figure').click(function(){
       popup.open($(this));
       $('.img-wrap .close-x').hide();
+      $('.img-wrap .add-x').hide();
     });
     
     $(document).on('click', '.popup img', function(){
@@ -16,10 +13,12 @@
     }).on('click', '.popup', function(){
       popup.close();
       $('.img-wrap .close-x').show();
+      $('.img-wrap .add-x').show();
     })
   },
   open: function($figure) {
     $('.img-wrap .close-x').hide();
+    $('.img-wrap .add-x').hide();
     $('.gallery').addClass('pop');
     $popup = $('<div class="popup" />').appendTo($('body'));
     $fig = $figure.clone().appendTo($('.popup'));
@@ -35,12 +34,41 @@
   },
   close: function(){
     $('.img-wrap .close-x').show();
+    $('.img-wrap .add-x').show();
     $('.gallery, .popup').removeClass('pop');
     setTimeout(function(){
       $('.popup').remove()
     }, 100);
   }
 }
+popup.init();
+      $('.img-wrap .close-x').on('click', function () {
+       $('#DeleteImage' + $(this).attr('data')).val(1);
+       $('.imagePath' + $(this).attr('data')).attr('src','/static/image/600_x_400.png')
+        return false;
+      });
+      $('.img-wrap .add-x').on('click', function () {
+        console.log( $(this).attr('data'))
+        $("#imagePath" + $(this).attr("data")).click();
+        return false;
+      });
 
-popup.init()
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      var extension = input.files[0].name.replace(/^.*\./, '');
+      if ( $.inArray(extension, ['gif','png','jpg','jpeg']) == -1){
+       $(input).val('');
+       return;
+      }
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        $('.' + $(input).attr("id") ).attr('src', e.target.result);
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  $("#imagePath1,#imagePath2,#imagePath3,#imagePath4,#imagePath5,#imagePath6").change(function() {
+     readURL(this);
+  }); 
 </script>

@@ -3,12 +3,14 @@ package controllers
 import (
 	"bytes"
 	"html/template"
+	"path/filepath"
 	"roomreserve/helpers"
 	"roomreserve/models"
 	"strconv"
 	"time"
 
 	"github.com/go-playground/form"
+	"github.com/google/uuid"
 )
 
 //RoomController _
@@ -18,13 +20,13 @@ type RoomController struct {
 
 //Get Home
 func (c *RoomController) Get() {
-	cateID, _ := strconv.ParseInt(c.Ctx.Request.URL.Query().Get("id"), 10, 32)
-	if cateID == 0 {
+	roomID, _ := strconv.ParseInt(c.Ctx.Request.URL.Query().Get("id"), 10, 32)
+	if roomID == 0 {
 		c.Data["title"] = "สร้างห้อง"
 	} else {
 		c.Data["title"] = "แก้ไขห้อง"
-		category, _ := models.GetRoom(int(cateID))
-		c.Data["m"] = category
+		room, _ := models.GetRoom(int(roomID))
+		c.Data["m"] = room
 	}
 	c.Data["ret"] = models.RetModel{}
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
@@ -89,16 +91,49 @@ func (c *RoomController) Post() {
 		ret.RetOK = false
 		ret.RetData = "กรุณาระบุชื่อ"
 	}
-
+	for index := 1; index <= 6; index++ {
+		file, header, _ := c.GetFile("imagePath" + strconv.Itoa(index))
+		if file != nil {
+			fileName := header.Filename
+			fileName = uuid.New().String() + filepath.Ext(fileName)
+			filePathSave := "static/image/room/" + fileName
+			err = c.SaveToFile("imagePath"+strconv.Itoa(index), filePathSave)
+			filePathSave = "/" + filePathSave
+			if err == nil {
+				switch "imagePath" + strconv.Itoa(index) {
+				case "imagePath1":
+					room.ImagePath1 = filePathSave
+					room.DeleteImage1 = 0
+				case "imagePath2":
+					room.ImagePath2 = filePathSave
+					room.DeleteImage2 = 0
+				case "imagePath3":
+					room.ImagePath3 = filePathSave
+					room.DeleteImage3 = 0
+				case "imagePath4":
+					room.ImagePath4 = filePathSave
+					room.DeleteImage4 = 0
+				case "imagePath5":
+					room.ImagePath5 = filePathSave
+					room.DeleteImage5 = 0
+				case "imagePath6":
+					room.ImagePath6 = filePathSave
+					room.DeleteImage6 = 0
+				}
+			}
+		}
+		_ = file
+	}
 	if ret.RetOK && room.ID == 0 {
 		room.CreatedAt = time.Now()
 		room.Creator = &actionUser
-		_, err := models.CreateRoom(room)
+		id, err := models.CreateRoom(room)
 		if err != nil {
 			ret.RetOK = false
 			ret.RetData = err.Error()
 		} else {
 			ret.RetData = "บันทึกสำเร็จ"
+			room.ID = int(id)
 		}
 	} else if ret.RetOK && room.ID > 0 {
 		room.EditedAt = time.Now()
@@ -111,10 +146,20 @@ func (c *RoomController) Post() {
 			ret.RetData = "บันทึกสำเร็จ"
 		}
 	}
-	ret.XSRF = c.XSRFToken()
+	if room.ID == 0 {
+		c.Data["title"] = "สร้างห้อง"
+	} else {
+		c.Data["title"] = "แก้ไขห้อง"
+		room, _ := models.GetRoom(int(room.ID))
+		c.Data["m"] = room
+	}
+	c.Data["ret"] = ret
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
-	c.Data["json"] = ret
-	c.ServeJSON()
+	c.Layout = "layout.html"
+	c.TplName = "room/create.html"
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["scripts"] = "room/create-js.html"
+	c.Render()
 }
 
 //DeleteRoom DeleteRoom

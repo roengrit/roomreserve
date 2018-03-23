@@ -22,12 +22,12 @@ type Room struct {
 	ImagePath4      string `orm:"size(300)"`
 	ImagePath5      string `orm:"size(300)"`
 	ImagePath6      string `orm:"size(300)"`
-	DeleteImage1    bool   `orm:"-"`
-	DeleteImage2    bool   `orm:"-"`
-	DeleteImage3    bool   `orm:"-"`
-	DeleteImage4    bool   `orm:"-"`
-	DeleteImage5    bool   `orm:"-"`
-	DeleteImage6    bool   `orm:"-"`
+	DeleteImage1    int    `orm:"-"`
+	DeleteImage2    int    `orm:"-"`
+	DeleteImage3    int    `orm:"-"`
+	DeleteImage4    int    `orm:"-"`
+	DeleteImage5    int    `orm:"-"`
+	DeleteImage6    int    `orm:"-"`
 	Active          bool
 	Creator         *User     `orm:"rel(fk)"`
 	CreatedAt       time.Time `orm:"auto_now_add;type(datetime)"`
@@ -108,6 +108,36 @@ func CreateRoom(Room Room) (ID int64, err error) {
 func UpdateRoom(room Room) (errRet error) {
 	o := orm.NewOrm()
 	getUpdate, _ := GetRoom(room.ID)
+	if room.DeleteImage1 == 1 {
+		room.ImagePath1 = ""
+	} else if room.ImagePath1 == "" {
+		room.ImagePath1 = getUpdate.ImagePath1
+	}
+	if room.DeleteImage2 == 1 {
+		room.ImagePath2 = ""
+	} else if room.ImagePath2 == "" {
+		room.ImagePath2 = getUpdate.ImagePath2
+	}
+	if room.DeleteImage3 == 1 {
+		room.ImagePath3 = ""
+	} else if room.ImagePath3 == "" {
+		room.ImagePath3 = getUpdate.ImagePath3
+	}
+	if room.DeleteImage4 == 1 {
+		room.ImagePath4 = ""
+	} else if room.ImagePath4 == "" {
+		room.ImagePath4 = getUpdate.ImagePath4
+	}
+	if room.DeleteImage5 == 1 {
+		room.ImagePath5 = ""
+	} else if room.ImagePath5 == "" {
+		room.ImagePath5 = getUpdate.ImagePath5
+	}
+	if room.DeleteImage6 == 1 {
+		room.ImagePath6 = ""
+	} else if room.ImagePath6 == "" {
+		room.ImagePath6 = getUpdate.ImagePath6
+	}
 	if getUpdate.Lock {
 		errRet = errors.New("ข้อมูลถูก Lock ไม่สามารถแก้ไขได้")
 	}
