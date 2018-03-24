@@ -48,5 +48,7 @@ func main() {
 	beego.Router("/role/?:id", &c.RoleController{}, "get:Get;post:Post;delete:Delete")
 	beego.Router("/role/list", &c.RoleController{}, "get:RoleList;post:GetRoleListJSON")
 
+	beego.Router("/reserve/?:id", &c.ReserveController{}, "get:Get")
+
 	beego.Run()
 }

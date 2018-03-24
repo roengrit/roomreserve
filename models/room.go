@@ -57,6 +57,14 @@ func GetAllRoom() *[]Room {
 	return room
 }
 
+//GetAllActiveRoom -
+func GetAllActiveRoom() *[]Room {
+	room := &[]Room{}
+	o := orm.NewOrm()
+	o.QueryTable("room").Filter("Status", 1).RelatedSel().All(room)
+	return room
+}
+
 //GetRoomList `select * from x offset $1 limit $2`
 func GetRoomList(currentPage, lineSize uint, term string) (num int64, roomListJSON []Room, err error) {
 	o := orm.NewOrm()

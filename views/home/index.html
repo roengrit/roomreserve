@@ -19,7 +19,7 @@
 				<div class="input-group-addon">
 					<i class="fa fa-calendar-o"></i>
 				</div>
-				<input type="text" class="form-control datepicker" data-provide="datepicker" data-date-language="th-th" id="reservationtime">
+				<input type="text" class="form-control datepicker" name="dateBegin" data-provide="datepicker" value='{{date .currentDate "d-m-Y"}}' data-date-language="th-th"  >
 			</div>
 		</div>
 		<div class="col-xs-2">
@@ -27,7 +27,7 @@
 				<div class="input-group-addon">
 					<i class="fa fa-clock-o"></i>
 				</div>
-				<input type="text" id="timeBegin" class="form-control">
+				<input type="text" id="timeBegin" value='{{date .currentDate "H:i"}}' class="form-control">
 			</div>
 		</div>
 		<div class="col-xs-4">
@@ -35,7 +35,7 @@
 				<div class="input-group-addon">
 					<i class="fa fa-calendar-o"></i>
 				</div>
-				<input type="text" class="form-control datepicker" data-provide="datepicker" data-date-language="th-th" id="s">
+				<input type="text" class="form-control datepicker" name="dateEnd" data-provide="datepicker" value='{{date .currentDate "d-m-Y"}}' data-date-language="th-th"  >
 			</div>
 		</div>
 		<div class="col-xs-2">
@@ -43,24 +43,26 @@
 				<div class="input-group-addon">
 					<i class="fa fa-clock-o"></i>
 				</div>
-				<input type="text" id="timeEnd" class="form-control">
+				<input type="text" id="timeEnd" value='{{date .currentDate "H:i"}}' class="form-control">
 
 			</div>
 		</div>
 	</div>
 	<div class="row " style="margin-top:10px;text-align:center; ">
 		<div class="col-xs-8">
-			<select class="room" name="Room">
+			 
+			<select class="room" id="Room" name="Room">
 				<option value="">เลือกห้อง</option>
-				<option value="A">A</option>
-				<option value="B">B</option>
+				{{range $key, $val := .room}}
+					<option value="{{$val.ID}}" > {{$val.Name}} </option>
+				{{end}}   
 			</select>
 		</div>
 		<div class="col-xs-4">
-			<select class="status" name="Status">
-				<option value="">ทุกห้อง</option>
+			<select class="status" id="Status" name="Status">
 				<option value="0">ห้องว่าง</option>
-				<option value="1">ห้องไม่ว่าง</option>
+				<option value="1">รายการจอง</option>
+				<option value="2">ห้องทั้งหมด</option>
 			</select>
 		</div>
 	</div>
@@ -72,7 +74,7 @@
 	<div class="row" style="margin-top:10px;text-align:center;">
 		<button type="submit" class="btn btn-primary">
 			<i class="fa fa-filter"> </i> ค้นหา</button>
-		<button type="reset" class="btn btn-default">
+		<button type="button" id="reset" class="btn btn-default">
 			<i class="fa fa-remove"> </i> ล้าง</button>
 	</div>
 	<div class="row" style="margin-top:70px;">

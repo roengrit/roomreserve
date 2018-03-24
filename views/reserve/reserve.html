@@ -1,0 +1,205 @@
+<style>
+    .form-group {
+        clear: both;
+        margin-bottom: 80px;
+    }
+</style>
+<link rel="stylesheet" href="/static/css/gallory/gallory.css">
+<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
+<section class="content-header">
+    {{if .ret.RetOK }} {{if .ret.RetData}}
+    <div id="top-alert">
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ .ret.RetData}}
+        </div>
+    </div>
+    {{end}} {{end}} {{if not .ret.RetOK}} {{if .ret.RetData}}
+    <div id="top-alert">
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ .ret.RetData}}
+        </div>
+    </div>
+    {{end}} {{end}}
+    <h1 id="title-content">
+        {{.title}}
+    </h1>
+</section>
+<section class="content">
+    <form {{if .r }} {{else }} action="/room" {{end}} autocomplete="off" enctype="multipart/form-data" id="create-form" method="post">
+        {{ .xsrfdata }}
+
+        <input type="hidden" id="ID" name="ID" value="{{.m.ID}}" />
+        <input type="hidden" id="ID" name="ID" value="{{.m.ID}}" />
+        <input type="hidden" id="ID" name="ID" value="{{.m.ID}}" />
+
+        <div id="box-req" class="box box-primary">
+            <div class="box-body">
+                    <div class="row"  style="margin-top: 5px;margin-bottom:20px;">
+                        <div class="col-sm-3">
+                            <div class="thumbnail">
+                                <img src="/static/image/600_x_400.png" class="img-responsive">
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <table class="no-border no-strip skills">
+                                <tbody class="no-border-x no-border-y">
+                                    <tr valign="top">
+                                        <td>
+                                            <h1 class="name" style="margin-top: 5px;margin-bottom:20px;">พระยาศรีวิสารวาจา</h1>
+                                            <div style="font-size:20px;margin-bottom:15px;">
+                                                <strong>จำนวนที่นั่ง : </strong>20
+                                                <strong>ที่นั่ง</strong>
+                                                <br>
+                                                <strong>วันที่ใช้ห้อง : </strong> 01 มี.ค. 61 เวลา 08:00
+                                                <br>
+                                                <strong>ถึงวันที่ : </strong> 01 มี.ค. 61 เวลา 17:00
+                                                <br>
+                                            </div>                                            
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-sm-4">
+                                <table class="no-border no-strip skills">
+                                    <h3 class="name" style="margin-top:15px;margin-bottom:20px;">ไฟล์แนบ</h3>
+                                    <tbody class="no-border-x no-border-y">
+                                        <tr valign="top">
+                                            <td>
+                                                8888888888888888888888888888888
+                                            </td>
+                                        </tr>
+                                        <tr valign="top">
+                                            <td>
+                                                8888888888888888888888888888888
+                                            </td>
+                                        </tr>
+                                        <tr valign="top">
+                                            <td>
+                                                8888888888888888888888888888888
+                                            </td>
+                                        </tr>
+                                        <tr valign="top">
+                                            <td>
+                                                8888888888888888888888888888888
+                                            </td>
+                                        </tr>
+                                        <tr valign="top">
+                                            <td>
+                                                8888888888888888888888888888888
+                                            </td>
+                                        </tr> 
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">หัวข้อการประชุม</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="Name" required name="Title" class="form-control" autocomplete="off" placeholder="หัวข้อการประชุม" value="{{.m.Title}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">ประธานการประชุม/วิทยากร</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="Lecturer" required name="Lecturer" class="form-control" autocomplete="off" placeholder="ประธานการประชุม/วิทยากร"
+                                    value="{{.m.Lecturer}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">จำนวนผู้เข้าร่วมประชุม</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="number" id="MemberCount" name="MemberCount" class="form-control" autocomplete="off" placeholder="จำนวนผู้เข้าร่วมประชุม" value="{{.m.MemberCount}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px;">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">ผู้เข้าประชุม [กรณีระบุได้]</label>
+                            <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-align-left"></i>
+                                    </span>
+                                    <textarea class="form-control"   id="MemberText" name="MemberText" rows="3" placeholder="ผู้เข้าประชุม">{{.m.MemberText}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px;">
+                        <div class="form-group req-box-form" >
+                            <div class="col-xs-12">
+                                <label for="req-name">อุปกรณ์ที่ต้องการ</label>
+                                <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-align-left"></i>
+                                        </span>
+                                        <textarea class="form-control"   id="DeviceAddOnText" name="DeviceAddOnText" rows="3" placeholder="อุปกรณ์ที่ต้องการ">{{.m.DeviceAddOnText}}</textarea>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="row" >
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">ผู้ประสานงาน/เบอร์โทร</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="Coordinate" name="Coordinate" class="form-control" autocomplete="off" placeholder="ผู้ประสานงาน/เบอร์โทร"
+                                    value="{{.m.Coordinate}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-6">
+                            <label for="req-name">สถานะ</label>
+                            <select class="form-control" id="Status" name="Status">
+                                <option value="1">ปกติ</option>
+                                <option value="0">ยกเลิก</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-6">
+                                <label for="req-name">ซ่อนหัวข้อการประชุม</label>
+                                <select class="form-control" id="HideTitle" name="HideTitle">
+                                    <option value="1">แสดง</option>
+                                    <option value="0">ซ่อน</option>
+                                </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    {{if .r}} {{else}}
+                    <button type="submit" class="btn btn-primary pull-right">บันทึก</button>
+                    <a href="/room/list" class="btn btn-default pull-right" style="margin-right:3px;">ยกเลิก</a>
+                    {{end}}
+                </div>
+            </div>
+    </form>
+</section>

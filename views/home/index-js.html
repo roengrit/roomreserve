@@ -19,7 +19,13 @@
          use24hours: true,
          format: 'HH:mm',
          showMeridian: false 
-    })
-    
+    }) 
+    $('#reset').click(function(){
+        $('#timeBegin,#timeEnd').val('');
+        $('.datepicker').val('');
+        $("#Room").val($("#Room option:first").val()).trigger('change');
+        $('#Status').val(0).trigger('change');
+        $('#Title').val('')
+    })    
     });
 </script>
