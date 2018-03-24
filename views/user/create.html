@@ -1,0 +1,255 @@
+<style>
+    .form-group {
+        clear: both;
+        margin-bottom: 80px;
+    }
+
+    input.largerCheckbox {
+        width: 20px;
+        height: 20px;
+    }
+
+    .img-wrap {
+        position: relative;
+        display: inline-block;
+        font-size: 0;
+    }
+
+    .img-wrap .close-x {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 100;
+        background-color: #ddd;
+        padding: 5px 5px 5px;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+        opacity: .2;
+        text-align: center;
+        font-size: 22px;
+        line-height: 10px;
+        border-radius: 10%;
+    }
+
+    .img-wrap:hover .close-x {
+        opacity: 1;
+    }
+
+    .img-wrap .add-x {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        z-index: 100;
+        background-color: #ddd;
+        padding: 5px 5px 5px;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+        opacity: .2;
+        text-align: center;
+        font-size: 22px;
+        line-height: 10px;
+        border-radius: 10%;
+    }
+
+    .img-wrap:hover .add-x {
+        opacity: 1;
+    }
+</style>
+<link rel="stylesheet" href="/static/css/gallory/gallory.css">
+<section class="content-header">
+    {{if .ret.RetOK }} {{if .ret.RetData}}
+    <div id="top-alert">
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ .ret.RetData}}
+        </div>
+    </div>
+    {{end}} {{end}} {{if not .ret.RetOK}} {{if .ret.RetData}}
+    <div id="top-alert">
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ .ret.RetData}}
+        </div>
+    </div>
+    {{end}} {{end}}
+    <h1 id="title-content">
+        {{.title}}
+    </h1>
+</section>
+<section class="content">
+    <form {{if .important}} action="/profile" {{else }} 
+   
+    action="/user"
+    
+    {{end}} autocomplete="off" enctype="multipart/form-data" id="create-form" method="post">
+        {{ .xsrfdata }}
+        <input type="hidden" id="ID" name="ID" value="{{.m.ID}}" />
+        <input type="hidden" id="DeleteImage1" name="DeleteImage1" value="0" /> 
+        <input type='file' id="imagePath1" name="imagePath1" style="display:none;" /> 
+
+        <div id="box-req" class="box box-primary">
+            <div class="box-body">
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">ชื่อ</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="Name" required name="Name" class="form-control" autocomplete="off" placeholder="ชื่อ" value="{{.m.Name}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">ชื่อผู้ใช้ระบบ</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="๊Username" required name="Username" class="form-control" {{.important}} autocomplete="off" placeholder="ชื่อผู้ใช้ระบบ"
+                                    value="{{.m.Username}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">รหัสผ่าน</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="password" id="Password" name="Password" class="form-control" autocomplete="off" placeholder="รหัสผ่าน"  >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="form-group req-box-form">
+                            <div class="col-xs-12">
+                                <label for="req-name">ยืนยันรหัสผ่าน</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-file-text-o"></i>
+                                    </span>
+                                    <input type="password" id="RePassword" name="RePassword" class="form-control" autocomplete="off" placeholder="ยืนยันรหัสผ่าน"  >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">แผนก</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="Depart" name="Depart" class="form-control" autocomplete="off" placeholder="แผนก"
+                                    value="{{.m.Depart}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-6">
+                            <label for="req-name">เบอร์โทร</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="Tel" name="Tel" class="form-control" autocomplete="off" placeholder="เบอร์โทร"
+                                    value="{{.m.Tel}}">
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                                <label for="req-name">อีเมล</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-file-text-o"></i>
+                                    </span>
+                                    <input type="text" id="Email" name="Email" class="form-control" autocomplete="off" placeholder="อีเมล"
+                                        value="{{.m.Email}}">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                
+                    <div class="row"
+                    {{if .important}} 
+                      style="display:none"
+                    {{end}}
+                    >
+                        <div class="form-group req-box-form">
+                            <div class="col-xs-6">
+                                <label for="req-name">สถานะ</label>
+                                <select class="form-control" id="Active" {{.important}} name="Active">
+                                    <option value="0">ปิดใช้งาน</option>
+                                    <option value="1">เปิดใช้งาน</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6">
+                                <label for="req-name">สิทธิ์</label>
+                                <select class="form-control" id="Role" {{.important}} name="Role.ID">
+                                        {{range $key, $val := .Role}}
+                                        <option value="{{$val.ID}}" > {{$val.Name}} </option>
+                                    {{end}}     
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+               
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">รูป</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-body" style="margin-top:-50px;">
+                    <div class="row">
+                        <div class="gallery">
+                            <figure class="img-wrap veiw-figure">
+                                <span class="close-x" data="1">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                <span class="add-x" v data="1">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                {{if .m.ImagePath1}}
+                                <img src="{{.m.ImagePath1}}" class="imagePath1" alt="" /> {{else}}
+                                <img src="/static/image/600_x_400.png" class="imagePath1" alt="" /> {{end}}
+                                <figcaption>ภาพประกอบที่ 1 </figcaption>
+                            </figure>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display:none;">
+                            <symbol id="close" viewBox="0 0 18 18">
+                                <path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M9,0.493C4.302,0.493,0.493,4.302,0.493,9S4.302,17.507,9,17.507
+                                            S17.507,13.698,17.507,9S13.698,0.493,9,0.493z M12.491,11.491c0.292,0.296,0.292,0.773,0,1.068c-0.293,0.295-0.767,0.295-1.059,0
+                                            l-2.435-2.457L6.564,12.56c-0.292,0.295-0.766,0.295-1.058,0c-0.292-0.295-0.292-0.772,0-1.068L7.94,9.035L5.435,6.507
+                                            c-0.292-0.295-0.292-0.773,0-1.068c0.293-0.295,0.766-0.295,1.059,0l2.504,2.528l2.505-2.528c0.292-0.295,0.767-0.295,1.059,0
+                                            s0.292,0.773,0,1.068l-2.505,2.528L12.491,11.491z" />
+                            </symbol>
+                        </svg>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    {{if .r}} {{else}}
+                    <button type="submit" class="btn btn-primary pull-right">บันทึก</button>
+                    {{if not .important}} 
+                       <a href="/user/list" class="btn btn-default pull-right" style="margin-right:3px;">ยกเลิก</a>
+                    {{end}}
+                   
+                    {{end}}
+                </div>
+            </div>
+    </form>
+</section>

@@ -44,40 +44,50 @@
               </li>
               <li class="{{.calendar}}">
                 <a href="/calendar">ปฏิทิน</a>
-              </li>
+              </li>              
+            </ul>
+        </div>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              {{if .username}}
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">อื่นๆ
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    {{if .username}}
                   <li>
                     <a href="/room/list">ห้องประชุม</a>
                   </li>
                   <li>
-                    <a href="#">ผู้ใช้งาน</a>
+                    <a href="/user/list">ผู้ใช้งาน</a>
                   </li>
                   <li>
-                    <a href="#">สิทธิ์</a>
+                    <a href="/role/list">สิทธิ์</a>
                   </li>
-                 
-                  {{end}}
-                  {{if not .username}}
-                    <li>
-                      <a href="/login">เข้าสู่ระบบ</a>
-                    </li>
-                  {{else}}
-                  <li class="divider"></li>
+                </ul>
+              </li>
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img src="{{.userimg}}" class="user-image"  >
+                  <span class="hidden-xs">{{.username}}</span>
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu" style="margin-top:2px;">
                   <li>
-                    <a href="#">โปรไฟล์</a>
+                    <a href="/profile">โปรไฟล์</a>
                   </li>
                   <li>
                     <a href="/logout">ออกจากระบบ</a>
                   </li>
-                  {{end}}
                 </ul>
               </li>
+              {{else}}
+              <li>
+                <a href="/login">เข้าสู่ระบบ</a>
+              </li>
+              {{end}}
             </ul>
+        </div>
     </header>
     <!-- Full Width Column -->
     <div class="content-wrapper">
@@ -97,6 +107,47 @@
       <!-- /.container -->
     </footer>
     </div>
+    <div class="modal modal-default fade" id="delete-global-modal">
+      <div class="modal-dialog">
+          <div class="modal-content" id="delete-global-modal-content" style=" border-radius: 8px; ">
+              <input type="hidden" id="global-delete-id" name="global-delete-id" />
+              <input type="hidden" id="global-delete-url" name="global-delete-url" />
+              <input type="hidden" id="global-delete-xsrf" name="global-delete-xsrf" />
+              <div class="modal-header alert-danger" style=" border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                  </button>
+                  <h4 class="modal-title ">ยืนยันการลบข้อมูล</h4>
+              </div>
+              <div class="modal-body">
+                  <div class="alert alert-danger fade in no-margin" style="display:none" id="global-delete-alert">
+                  </div>
+                  <p>ท่านกำลังจะลบข้อมูล, จะดำเนินการต่อหรือไม่?</p>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"> ปิด </button>
+                  <button type="button" onclick="deleteGlobal()" class="btn btn-warning">
+                      <i class="fa fa-trash-o"></i> ลบข้อมูล
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="modal modal-default fade" id="room-global-modal">
+      <div class="modal-dialog" style="width:100%; height: 100%; margin: 0; padding: 0;">
+          <div class="modal-content"  style=" border-radius: 8px; ">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              </div>
+              <div  id="showroom">
+                 
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"> ปิด </button>
+              </div>
+          </div>
+      </div>
+  </div>
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>

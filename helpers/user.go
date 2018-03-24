@@ -13,11 +13,13 @@ var s = securecookie.New(
 	securecookie.GenerateRandomKey(32))
 
 //KeepLogin login
-func KeepLogin(w *c.Response, username string, roleID int) (ok bool, err string) {
+func KeepLogin(w *c.Response, username string, ID, roleID int, imagePath string) (ok bool, err string) {
 	value := map[string]string{
+		"id":       strconv.Itoa(ID),
 		"username": username,
 		"role":     strconv.Itoa(roleID),
 		"req-only": "1",
+		"image":    imagePath,
 	}
 	if encoded, errs := s.Encode("fixman", value); errs != nil {
 		ok = false
@@ -55,6 +57,17 @@ func GetUser(r *http.Request) string {
 		value := make(map[string]string)
 		if err = s.Decode("fixman", cookie.Value, &value); err == nil {
 			return value["username"]
+		}
+	}
+	return ""
+}
+
+//GetUserImage get user from cookie
+func GetUserImage(r *http.Request) string {
+	if cookie, err := r.Cookie("fixman"); err == nil {
+		value := make(map[string]string)
+		if err = s.Decode("fixman", cookie.Value, &value); err == nil {
+			return value["image"]
 		}
 	}
 	return ""

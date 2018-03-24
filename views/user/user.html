@@ -3,13 +3,13 @@
             background-color: white;
         }
     </style>
-    <form action="/room/list" onsubmit="LoadData();return false;" id="ListForm" method="post">
+    <form action="/user/list" onsubmit="LoadData();return false;" id="ListForm" method="post">
         {{ .xsrfdata }}
         <input type="hidden" id="PerPage" name="PerPage" value="5" >
         <input type="hidden" id="Page" name="Page" value="{{.Page}}" >
         <div class="row" style="margin-top:70px;">
             <div class="col-xs-12">
-                    <input type="text" class="form-control" style="border-radius:5px!important;" placeholder="ค้นหาห้อง" name="SearchTxt" id="search">
+                    <input type="text" class="form-control" style="border-radius:5px!important;" placeholder="ค้นหาผู้ใช้งาน" name="SearchTxt" id="search">
             </div>
         </div>
         <div class="row" style="margin-top:10px;text-align:center;">
@@ -19,7 +19,7 @@
                         <i class="fa fa-remove"> </i> ล้าง</button>
             <button type="submit" class="btn btn-primary">
                 <i class="fa fa-filter"> </i> ค้นหา</button>
-            <a href="/room" class="btn btn-default">
+            <a href="/user" class="btn btn-default">
                         <i class="fa fa-plus"> </i> เพิ่ม</a>
         </div>
         <div class="row" style="margin-top:70px;">

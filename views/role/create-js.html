@@ -1,12 +1,8 @@
 <script>
   var saveRet = '{{.ret.RetOK}}';
   if (saveRet == 'true') {
-    setTimeout(function () { window.location.href = '/room/list' }, 1000);
+    setTimeout(function () { window.location.href = '/role/list' }, 1000);
   }
-  $("#Status").val('{{.m.Status}}');
-  if ($("#Status").val() == '' || $("#Status").val() == null) {
-    $("#Status").val($("#Status option:first").val());
-  }      
   popup = {
   init: function(){
     $('.veiw-figure').click(function(){

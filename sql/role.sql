@@ -1,0 +1,3 @@
+INSERT INTO "role"("i_d", "lock", "name", "creator_id", "created_at", "editor_id", "edited_at", "access") VALUES (2, 'f', 'User', 1, '2018-03-24 13:00:35+07', 1, '2018-03-24 16:20:21.449587+07', 'on,,on');
+INSERT INTO "role"("i_d", "lock", "name", "creator_id", "created_at", "editor_id", "edited_at", "access") VALUES (1, 't', 'Admin', 1, '2018-03-22 21:17:10+07', NULL, NULL, 'on,on,on');
+INSERT INTO "role"("i_d", "lock", "name", "creator_id", "created_at", "editor_id", "edited_at", "access") VALUES (4, 'f', 'Person', 1, '2018-03-24 16:40:41.342961+07', NULL, '2018-03-24 16:40:41.342961+07', ',,');

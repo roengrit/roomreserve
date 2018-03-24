@@ -1,12 +1,22 @@
 <script>
   var saveRet = '{{.ret.RetOK}}';
+  var profile = '{{.important}}';
   if (saveRet == 'true') {
-    setTimeout(function () { window.location.href = '/room/list' }, 1000);
+    if (profile=='')
+     setTimeout(function () { window.location.href = '/user/list' }, 1000);
   }
-  $("#Status").val('{{.m.Status}}');
-  if ($("#Status").val() == '' || $("#Status").val() == null) {
-    $("#Status").val($("#Status option:first").val());
-  }      
+  var Active =  '{{.m.Active}}';
+  if(Active == 'true') {
+    $("#Active").val("1");
+  }else{
+    $("#Active").val("0");    
+  }    
+  
+  $("#Role").val('{{.m.Role.ID}}');
+  if ($("#Role").val() == '' || $("#Role").val() == null) {
+    $("#Role").val($("#Role option:first").val());
+  } 
+
   popup = {
   init: function(){
     $('.veiw-figure').click(function(){
@@ -75,7 +85,7 @@ popup.init();
     }
   }
 
-  $("#imagePath1,#imagePath2,#imagePath3,#imagePath4,#imagePath5,#imagePath6").change(function() {
+  $("#imagePath1").change(function() {
      readURL(this);
   }); 
 </script>

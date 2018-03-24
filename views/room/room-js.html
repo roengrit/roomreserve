@@ -27,26 +27,34 @@
             }
             data.RoomList.forEach(dat => {
                 var imagePath = dat.ImagePath1 == '' || dat.ImagePath1 == undefined ? '/static/image/600_x_400.png' : dat.ImagePath1;
-                console.log(dat.ImagePath1);
                 $('#RetData').append(`
                 <tr>
                             <td valign="top" style=" cursor: pointer;">
                                 <div class="media">
-                                    <div class="media-left" style="vertical-align:middle">
-                                        <img src="`+imagePath+`" style="width: 100px;">
+                                    <div class="media-left" style="vertical-align:middle" onclick="showRoom(`+ dat.ID +`)">
+                                        <img class="respondsive" src="`+imagePath+`" style="width: 160px;">
                                     </div>
                                     <div class="media-body">
                                         <h3 class="media-heading">`+ dat.Name+`</h3>
                                         <p  >
                                             <span  > <strong>จำนวนที่นั่ง &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.SupportText+` </span>
                                             <br>
-                                            <strong >อาคาร/สถานที่ &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.LocationText   +`</p>
+                                            <strong >อาคาร/สถานที่ &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.LocationText   +`
+                                            <br>
+                                            <strong >สถานะ &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ 
+                                            (dat.Status == 0 ? 
+                                            (dat.Remark!= ""? "<span class='label label-danger'> "+ dat.Remark +" </span>" : "<span class='label label-danger'> ปิดปรับปรุง </span>"  ) 
+                                            : " <span  class='label label-success'  > เปิดใช้งาน </span>" ) 
+                                            +`
+                                            <br>
+                                            <strong >ผู้ดูแล/เบอร์โทร &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.RoomAdminText   +`
+                                            </p>
                                     </div>
                                 </div>
                             </td>
                             <td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%">
                                     <div class="btn-group">
-                                            <a href="javascript:void(0)" class="btn btn-sm btn-danger"> <i class="fa fa-trash  fa-1x"></i></a>
+                                            <a href="javascript:void(0)" onclick='confirmDeleteGlobal(`+dat.ID+`,"/room")'  class="btn btn-sm btn-danger"> <i class="fa fa-trash  fa-1x"></i></a>
                                             <a href="/room?id=`+ dat.ID +`" class="btn btn-sm btn-default" >  <i class="fa  fa-angle-right  fa-1x"></i></a>
                                     </div>
                             </td> 

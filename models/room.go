@@ -16,6 +16,8 @@ type Room struct {
 	LocationText    string `orm:"size(300)"`
 	AddOnDeviceText string `orm:"size(300)"`
 	RoomAdminText   string `orm:"size(300)"`
+	Status          int
+	Remark          string `orm:"size(300)"`
 	ImagePath1      string `orm:"size(300)"`
 	ImagePath2      string `orm:"size(300)"`
 	ImagePath3      string `orm:"size(300)"`
@@ -66,14 +68,13 @@ func GetRoomList(currentPage, lineSize uint, term string) (num int64, roomListJS
 					T0.location_text,
 					T0.add_on_device_text,
 					T0.room_admin_text,
-					T0.active	 				 ,
-					T0.image_path1
+					T0.active ,
+					T0.image_path1,
+					T0.status,
+					T0.remark
 			   FROM room T0	    
-			   WHERE (lower(T0.name) like lower(?)) `
-
+			   WHERE (lower(T0.name) like lower(?)) order by T0.name`
 	num, _ = o.Raw(sql, "%"+term+"%").QueryRows(&roomListJSON)
-	sql += " order by T0.name "
-
 	if lineSize+currentPage > uint(num) {
 		lineSize = uint(num)
 	} else if currentPage > 0 {
@@ -82,7 +83,6 @@ func GetRoomList(currentPage, lineSize uint, term string) (num int64, roomListJS
 	if currentPage > lineSize {
 		currentPage = 0
 	}
-
 	roomListJSON = roomListJSON[currentPage:lineSize]
 	return num, roomListJSON, err
 }

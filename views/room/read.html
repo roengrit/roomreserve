@@ -8,78 +8,16 @@
         width: 20px;
         height: 20px;
     }
-
-    .img-wrap {
-        position: relative;
-        display: inline-block;
-        font-size: 0;
+    .main-header ,.main-footer{
+        display: none;
     }
-
-    .img-wrap .close-x {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        z-index: 100;
-        background-color: #ddd;
-        padding: 5px 5px 5px;
-        color: black;
-        font-weight: bold;
-        cursor: pointer;
-        opacity: .2;
-        text-align: center;
-        font-size: 22px;
-        line-height: 10px;
-        border-radius: 10%;
-    }
-
-    .img-wrap:hover .close-x {
-        opacity: 1;
-    }
-
-    .img-wrap .add-x {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        z-index: 100;
-        background-color: #ddd;
-        padding: 5px 5px 5px;
-        color: black;
-        font-weight: bold;
-        cursor: pointer;
-        opacity: .2;
-        text-align: center;
-        font-size: 22px;
-        line-height: 10px;
-        border-radius: 10%;
-    }
-
-    .img-wrap:hover .add-x {
-        opacity: 1;
+    .content-wrapper{
+        background-color: white;
     }
 </style>
 <link rel="stylesheet" href="/static/css/gallory/gallory.css">
-<section class="content-header">
-    {{if .ret.RetOK }} {{if .ret.RetData}}
-    <div id="top-alert">
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            {{ .ret.RetData}}
-        </div>
-    </div>
-    {{end}} {{end}} {{if not .ret.RetOK}} {{if .ret.RetData}}
-    <div id="top-alert">
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            {{ .ret.RetData}}
-        </div>
-    </div>
-    {{end}} {{end}}
-    <h1 id="title-content">
-        {{.title}}
-    </h1>
-</section>
 <section class="content">
-    <form {{if .r }} {{else }} action="/room" {{end}} autocomplete="off" enctype="multipart/form-data" id="create-form" method="post">
+    <form {{if .r }} {{else }} {{end}} autocomplete="off"  enctype="multipart/form-data" id="create-form" method="post">
         {{ .xsrfdata }}
         <input type="hidden" id="ID" name="ID" value="{{.m.ID}}" />
 
@@ -107,7 +45,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-file-text-o"></i>
                                 </span>
-                                <input type="text" id="Name" required name="Name" class="form-control" autocomplete="off" placeholder="ชื่อ" value="{{.m.Name}}">
+                                <input type="text" id="Name" required name="Name" readonly class="form-control" autocomplete="off" placeholder="ชื่อ" value="{{.m.Name}}">
                             </div>
                         </div>
                     </div>
@@ -120,7 +58,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-file-text-o"></i>
                                 </span>
-                                <input type="text" id="SupportText" required name="SupportText" class="form-control" autocomplete="off" placeholder="การรองรับ"
+                                <input type="text" id="SupportText" required readonly name="SupportText" class="form-control" autocomplete="off" placeholder="การรองรับ"
                                     value="{{.m.SupportText}}">
                             </div>
                         </div>
@@ -134,7 +72,8 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-file-text-o"></i>
                                 </span>
-                                <input type="text" id="LocationText" name="LocationText" class="form-control" autocomplete="off" placeholder="สถานที่" value="{{.m.LocationText}}">
+                                <input type="text" id="LocationText"  readonly name="LocationText" class="form-control" autocomplete="off" placeholder="สถานที่"
+                                    value="{{.m.LocationText}}">
                             </div>
                         </div>
                     </div>
@@ -147,7 +86,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-file-text-o"></i>
                                 </span>
-                                <input type="text" id="AddOnDeviceText" name="AddOnDeviceText" class="form-control" autocomplete="off" placeholder="อุปกรณ์"
+                                <input type="text" id="AddOnDeviceText" readonly  name="AddOnDeviceText" class="form-control" autocomplete="off" placeholder="อุปกรณ์"
                                     value="{{.m.AddOnDeviceText}}">
                             </div>
                         </div>
@@ -161,32 +100,32 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-file-text-o"></i>
                                 </span>
-                                <input type="text" id="RoomAdminText" name="RoomAdminText" class="form-control" autocomplete="off" placeholder="ผู้ดูแล/เบอร์โทร"
+                                <input type="text" id="RoomAdminText"  readonly name="RoomAdminText" class="form-control" autocomplete="off" placeholder="ผู้ดูแล/เบอร์โทร"
                                     value="{{.m.RoomAdminText}}">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group req-box-form">
-                        <div class="col-xs-6">
-                            <label for="req-name">สถานะ</label>
-                            <select class="form-control" id="Status" name="Status">
-                                <option value="0">ปิดปรับปรุง</option>
-                                <option value="1">เปิดใช้งาน</option>
-                            </select>
-                        </div>
-                        <div class="col-xs-6">
-                            <label for="req-name">ข้อความแจ้งให้ทราบ</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-file-text-o"></i>
-                                </span>
-                                <input type="text" id="Remark" name="Remark" class="form-control" autocomplete="off" placeholder="ข้อความแจ้งให้ทราบ"
-                                    value="{{.m.Remark}}">
+                        <div class="form-group req-box-form">
+                            <div class="col-xs-6">
+                                <label for="req-name">สถานะ</label>
+                                <select class="form-control" id="Status" readonly name="Status">
+                                    <option value="0">ปิดปรับปรุง</option>
+                                    <option value="1">เปิดใช้งาน</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-6">
+                                <label for="req-name">ข้อความแจ้งให้ทราบ</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-file-text-o"></i>
+                                    </span>
+                                    <input type="text" id="Remark" name="Remark" readonly class="form-control" autocomplete="off" placeholder="ข้อความแจ้งให้ทราบ"
+                                        value="{{.m.Remark}}">
+                                </div>
                             </div>
                         </div>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="form-group req-box-form">
@@ -195,16 +134,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="timeline-body" style="margin-top:-50px;">
-                    <div class="row">
+                <div class="timeline-body" style="margin-top:-50px;" >
+                    <div class="row">                        
                         <div class="gallery">
                             <figure class="img-wrap veiw-figure">
-                                <span class="close-x" data="1">
-                                    <i class="fa fa-trash"></i>
-                                </span>
-                                <span class="add-x" v data="1">
-                                    <i class="fa fa-plus"></i>
-                                </span>
                                 {{if .m.ImagePath1}}
                                 <img src="{{.m.ImagePath1}}" class="imagePath1" alt="" /> {{else}}
                                 <img src="/static/image/600_x_400.png" class="imagePath1" alt="" /> {{end}}
@@ -212,12 +145,6 @@
                             </figure>
 
                             <figure class="img-wrap veiw-figure">
-                                <span class="close-x" data="2">
-                                    <i class="fa fa-trash"></i>
-                                </span>
-                                <span class="add-x" data="2">
-                                    <i class="fa fa-plus"></i>
-                                </span>
                                 {{if .m.ImagePath2}}
                                 <img src="{{.m.ImagePath2}}" class="imagePath2" alt="" /> {{else}}
                                 <img src="/static/image/600_x_400.png" class="imagePath2" alt="" /> {{end}}
@@ -225,12 +152,6 @@
                             </figure>
 
                             <figure class="img-wrap veiw-figure">
-                                <span class="close-x" data="3">
-                                    <i class="fa fa-trash"></i>
-                                </span>
-                                <span class="add-x" data="3">
-                                    <i class="fa fa-plus"></i>
-                                </span>
                                 {{if .m.ImagePath3}}
                                 <img src="{{.m.ImagePath3}}" class="imagePath3" alt="" /> {{else}}
                                 <img src="/static/image/600_x_400.png" class="imagePath3" alt="" /> {{end}}
@@ -238,12 +159,6 @@
                             </figure>
 
                             <figure class="img-wrap veiw-figure">
-                                <span class="close-x" data="4">
-                                    <i class="fa fa-trash"></i>
-                                </span>
-                                <span class="add-x" data="4">
-                                    <i class="fa fa-plus"></i>
-                                </span>
                                 {{if .m.ImagePath4}}
                                 <img src="{{.m.ImagePath4}}" class="imagePath4" alt="" /> {{else}}
                                 <img src="/static/image/600_x_400.png" class="imagePath4" alt="" /> {{end}}
@@ -251,12 +166,6 @@
                             </figure>
 
                             <figure class="img-wrap veiw-figure">
-                                <span class="close-x" data="5">
-                                    <i class="fa fa-trash"></i>
-                                </span>
-                                <span class="add-x" data="5">
-                                    <i class="fa fa-plus"></i>
-                                </span>
                                 {{if .m.ImagePath5}}
                                 <img src="{{.m.ImagePath5}}" class="imagePath5" alt="" /> {{else}}
                                 <img src="/static/image/600_x_400.png" class="imagePath5" alt="" /> {{end}}
@@ -266,12 +175,6 @@
 
 
                             <figure class="img-wrap veiw-figure">
-                                <span class="close-x" data="6">
-                                    <i class="fa fa-trash"></i>
-                                </span>
-                                <span class="add-x" data="6">
-                                    <i class="fa fa-plus"></i>
-                                </span>
                                 {{if .m.ImagePath6}}
                                 <img src="{{.m.ImagePath6}}" class="imagePath6" alt="" /> {{else}}
                                 <img src="/static/image/600_x_400.png" class="imagePath6" alt="" /> {{end}}
@@ -292,12 +195,50 @@
                         </svg>
                     </div>
                 </div>
-                <div class="box-footer">
-                    {{if .r}} {{else}}
-                    <button type="submit" class="btn btn-primary pull-right">บันทึก</button>
-                    <a href="/room/list" class="btn btn-default pull-right" style="margin-right:3px;">ยกเลิก</a>
-                    {{end}}
-                </div>
             </div>
     </form>
-</section>
+</section> 
+<script>
+    popup = {
+  init: function(){
+    $('.veiw-figure').click(function(){
+      popup.open($(this));
+      $('.img-wrap .close-x').hide();
+      $('.img-wrap .add-x').hide();
+    });
+    
+    $(document).on('click', '.popup img', function(){
+      return false;
+    }).on('click', '.popup', function(){
+      popup.close();
+      $('.img-wrap .close-x').show();
+      $('.img-wrap .add-x').show();
+    })
+  },
+  open: function($figure) {
+    $('.img-wrap .close-x').hide();
+    $('.img-wrap .add-x').hide();
+    $('.gallery').addClass('pop');
+    $popup = $('<div class="popup" />').appendTo($('body'));
+    $fig = $figure.clone().appendTo($('.popup'));
+    $bg = $('<div class="bg" />').appendTo($('.popup'));
+    $close = $('<div class="close"><svg><use xlink:href="#close"></use></svg></div>').appendTo($fig);
+    $shadow = $('<div class="shadow" />').appendTo($fig);
+    src = $('img', $fig).attr('src');
+    $shadow.css({backgroundImage: 'url(' + src + ')'});
+    $bg.css({backgroundImage: 'url(' + src + ')'});
+    setTimeout(function(){
+      $('.popup').addClass('pop');
+    }, 10);
+  },
+  close: function(){
+    $('.img-wrap .close-x').show();
+    $('.img-wrap .add-x').show();
+    $('.gallery, .popup').removeClass('pop');
+    setTimeout(function(){
+      $('.popup').remove()
+    }, 100);
+  }
+}
+popup.init();
+</script>

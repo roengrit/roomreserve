@@ -1,0 +1,77 @@
+<style>
+    .form-group {
+        clear: both;
+        margin-bottom: 80px;
+    }
+ </style>
+<section class="content-header">
+    {{if .ret.RetOK }} {{if .ret.RetData}}
+    <div id="top-alert">
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ .ret.RetData}}
+        </div>
+    </div>
+    {{end}} {{end}} {{if not .ret.RetOK}} {{if .ret.RetData}}
+    <div id="top-alert">
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ .ret.RetData}}
+        </div>
+    </div>
+    {{end}} {{end}}
+    <h1 id="title-content">
+        {{.title}}
+    </h1>
+</section>
+<section class="content">
+    <form {{if .r }} {{else }} action="/role" {{end}} autocomplete="off" enctype="multipart/form-data" id="create-form" method="post">
+        {{ .xsrfdata }}
+        <input type="hidden" id="ID" name="ID" value="{{.m.ID}}" />
+        <div id="box-req" class="box box-primary">
+            <div class="box-body">
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-12">
+                            <label for="req-name">ชื่อ</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <input type="text" id="Name" required name="Name" class="form-control" autocomplete="off" placeholder="ชื่อ" value="{{.m.Name}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group req-box-form">
+                        <div class="col-xs-6">
+                            <label for="req-name">สิทธิ์การใช้งาน</label>
+                            <br>
+                            <label>
+                                <input type="checkbox"
+                                {{if.m.User}} checked {{end}}
+                                name="User"> &nbsp;จัดการผู้ใช้งาน&nbsp;&nbsp;&nbsp;
+                            </label>
+                            <label>
+                                <input type="checkbox" 
+                                {{if.m.Role}} checked {{end}}
+                                name="Role"> &nbsp;จัดการสิทธิ์&nbsp;&nbsp;&nbsp;
+                            </label>
+                            <label>
+                                <input type="checkbox" 
+                                {{if.m.Room}} checked {{end}}
+                                name="Room"> &nbsp;จัดการห้องประชุม&nbsp;&nbsp;&nbsp;
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    {{if .r}} {{else}}
+                    <button type="submit" class="btn btn-primary pull-right">บันทึก</button>
+                    <a href="/role/list" class="btn btn-default pull-right" style="margin-right:3px;">ยกเลิก</a>
+                    {{end}}
+                </div>
+            </div>
+    </form>
+</section>

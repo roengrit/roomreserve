@@ -1,0 +1,59 @@
+<script>
+    function Paging(page) {
+        $('#Page').val(page);
+        LoadData();
+    }
+    $('.change-perpage').click(function () {
+        $('#PerPage').val($(this).attr("top"));
+        if ($(this).attr("top") == '0') {
+            $('#PerPageLabel').html('ทั้งหมด');
+        } else {
+            $('#PerPageLabel').html($(this).html());
+        }
+        LoadData();
+    });
+    function ReSetForm() {
+        $('#BtnClear').trigger("click");
+        LoadData();
+    }
+    function LoadData() {
+        url = $('#ListForm').attr('action');
+        $('#RetData').fadeOut(100);
+        $.post(url, $('#ListForm').serialize(), function (data) {
+            $('#RetData').html('');
+            if (data.UserList == null) {
+                $('#RetCount').html('ไม่มีข้อมูลที่ค้นหา');
+                return;
+            }
+            $('#RetData').append(`
+                <tr>
+                   <td>ชื่อ</td>        
+                   <td>เบอร์โทร</td>        
+                   <td>แผนก</td>  
+                   <td>สถานะ</td>  
+                   <td>#</td>        
+                </tr>
+                `);
+            data.UserList.forEach(dat => {
+                
+                $('#RetData').append(`
+                <tr>
+                   <td>`+ dat.Name +`</td>        
+                   <td>`+ dat.Tel +`</td>        
+                   <td>`+ dat.Depart +`</td>  
+                   <td>`+ (dat.Active?  "<span  class='label label-success'  > เปิดใช้งาน </span>" : "<span class='label label-danger'> ปิดใช้งาน </span>" ) +`</td>
+                   <td style="cursor: pointer;vertical-align:middle;width:10%"><div class="btn-group">
+                                            <a href="javascript:void(0)" `+(dat.Lock? "disabled" : `onclick='confirmDeleteGlobal(`+dat.ID+`,"/user")'` )+ ` class="btn btn-sm btn-danger"> <i class="fa fa-trash  fa-1x"></i></a>
+                                            <a href="/user/?id=`+ dat.ID +`" class="btn btn-sm btn-default" >  <i class="fa  fa-angle-right  fa-1x"></i></a>
+                        </div>
+                    </td>       
+                </tr>
+                `);
+            });
+            $('#RetCount').html('ค้นเจอทั้งหมด ' + data.Page + ' รายการ');
+            $('#Pagination').html(data.Paging)
+            $('#RetData').fadeIn(100);
+        });
+    }
+    LoadData();
+</script>

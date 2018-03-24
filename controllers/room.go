@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/astaxie/beego"
+
 	"github.com/go-playground/form"
 	"github.com/google/uuid"
 )
@@ -16,6 +18,11 @@ import (
 //RoomController _
 type RoomController struct {
 	BaseController
+}
+
+//RoomReadController _
+type RoomReadController struct {
+	beego.Controller
 }
 
 //Get Home
@@ -34,6 +41,17 @@ func (c *RoomController) Get() {
 	c.TplName = "room/create.html"
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["scripts"] = "room/create-js.html"
+	c.Render()
+}
+
+//Get Home
+func (c *RoomReadController) Read() {
+	roomID, _ := strconv.ParseInt(c.Ctx.Request.URL.Query().Get("id"), 10, 32)
+	room, _ := models.GetRoom(int(roomID))
+	c.Data["m"] = room
+	c.Data["ret"] = models.RetModel{}
+	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
+	c.TplName = "room/read.html"
 	c.Render()
 }
 
@@ -148,6 +166,7 @@ func (c *RoomController) Post() {
 	}
 	if room.ID == 0 {
 		c.Data["title"] = "สร้างห้อง"
+		c.Data["m"] = room
 	} else {
 		c.Data["title"] = "แก้ไขห้อง"
 		room, _ := models.GetRoom(int(room.ID))
@@ -162,8 +181,8 @@ func (c *RoomController) Post() {
 	c.Render()
 }
 
-//DeleteRoom DeleteRoom
-func (c *RoomController) DeleteRoom() {
+//Delete Delete
+func (c *RoomController) Delete() {
 	ID, _ := strconv.ParseInt(c.Ctx.Input.Param(":id"), 10, 32)
 	ret := models.RetModel{}
 	ret.RetOK = true
