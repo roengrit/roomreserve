@@ -1,0 +1,115 @@
+<script>
+    $(".addmore").on('click', function () {
+        var html = `
+        <tr> <td>
+        <form id="form-upload" action="#">
+              <div  style="display:none;">
+                    <input id="file-open" class="file-loading" type="file" name="file-att">
+                    <input id="doc-id" type="hidden" name="ID">
+              </div>
+              <div id="progress-file" style="display:none;">
+                    <div class="progress progress-striped active">
+                            <div class="progress-bar" style="width: 100%;">   </div>
+                    </div>
+              </div>
+        </form>
+        </td>
+        </tr>
+        `;
+       
+        $('#file-area').prepend(html);
+        $('#file-open').change(function () {
+            $('#doc-id').val($('#ID').val())
+            $('#progress-file').show();
+            $form = $('#form-upload');
+            uploadImage($form);
+        });
+        $("#file-open").click();
+    });
+
+    function uploadImage($form) {
+        $form.find('.progress-bar').removeClass('progress-bar-success')
+            .removeClass('progress-bar-danger');
+        var xhr = new window.XMLHttpRequest();
+        $.ajax({
+            url: "/reserve/file",
+            type: "POST",
+            data: new FormData($form[0]),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (datas) {
+                console.log(datas);
+                if (datas.RetOK) {
+                    $('#form-upload').parent().parent().html(
+                        `<td id=file-`+ datas.ID +`>
+                           <a style="margin-right:15px;" href="/reserve/dowload/`+ datas.ID + `">` + datas.Name + `</a>
+                        </td>
+                        <td >
+                           <a  href="javascript:void(0)" onclick="confirmDelete(`+ datas.ID + `,'/reserve/delete/file')"><i class="fa fa-trash"></i></a>
+                        </td>`
+                    ); 
+                } else {
+                    $form.find('.progress-bar').removeClass('progress-bar-success').removeClass('progress-bar-danger');
+                    $form.find('.progress-bar').addClass('progress-bar-danger');
+                    $form.find('.progress-bar').width(100 + '%').html(datas.Alert);
+                    setTimeout(function () {
+                        $('#form-upload').parent().parent().remove();
+                    }, 5000);
+                }
+            },
+            error: function () {
+                    $form.find('.progress-bar').removeClass('progress-bar-success').removeClass('progress-bar-danger');
+                    $form.find('.progress-bar').addClass('progress-bar-danger');
+                    $form.find('.progress-bar').width(100 + '%').html("เกิดข้อผิดพลาด");
+                    setTimeout(function () {
+                        $('#form-upload').parent().parent().remove();
+                    }, 2000);
+            },
+            xhr: function () {
+                xhr.upload.addEventListener("progress", function (e) {
+                    if (e.lengthComputable) {
+                        var percentComplete = (e.loaded || e.position) * 100 / e.total;
+                        $form.find('.progress-bar').width(percentComplete + '%').html(percentComplete + '%');
+                    }
+                }, false);
+                xhr.addEventListener('load', function (e) {
+                    $form.find('.progress-bar').addClass('progress-bar-success').html('upload completed....');
+                });
+                return xhr;
+            }
+
+        });
+    } 
+    function confirmDelete(id,url) {
+        hideTopAlert();
+        $('#delete-modal').hide();
+        $.get("/service/secure/json" , function (data) {
+            $("#delete-xsrf").val(data)
+        });
+        $("#delete-id").val(id)
+        $("#delete-url").val(url)
+        $("#delete-modal").modal("show");
+    }
+    function deleteFile() {
+        hideTopAlert();
+        $.ajax({
+            url: $("#delete-url").val() + "/" + $("#delete-id").val() ,
+            type: 'DELETE',
+            beforeSend: function (xhr) { xhr.setRequestHeader('X-Xsrftoken', $("#delete-xsrf").val()); },
+            success: function (data) {
+                if (data.RetOK) {
+                    showTopAlert(data.RetData, "success");
+                    $("#delete-modal").modal("hide");
+                    $('#file-' + $("#delete-id").val()).parent().remove();
+                } else {
+                    showDelete(data.RetData);
+                }
+            }
+        });
+    }
+        function showDelete(msg) {
+            $("#delete-alert").html(msg);
+            $("#delete-alert").show();
+        }
+</script>
