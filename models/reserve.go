@@ -13,16 +13,16 @@ type RoomReserve struct {
 	DocNo           string `orm:"size(20)"`
 	Lock            bool
 	Title           string `orm:"size(300)"`
-	Lecturer        string `orm:"size(300)"`
-	Coordinate      string `orm:"size(300)"`
-	MemberText      string `orm:"size(2000)"`
-	MemberCount     int
-	DeviceAddOnText string `orm:"size(500)"`
+	Lecturer        string `orm:"null;size(300)"`
+	Coordinate      string `orm:"null;size(300)"`
+	MemberText      string `orm:"null;size(2000)"`
+	MemberCount     int    `orm:"null"`
+	DeviceAddOnText string `orm:"null;size(500)"`
 	Status          int
 	HideTitle       int
 	HideFile        int
-	DateBegin       time.Time
-	DateEnd         time.Time
+	DateBegin       time.Time         `form:"-" orm:"null;"`
+	DateEnd         time.Time         `form:"-" orm:"null;"`
 	Remark          string            `orm:"size(300)"`
 	Room            *Room             `orm:"rel(fk)"`
 	Creator         *User             `orm:"rel(fk)"`
@@ -49,10 +49,10 @@ type RoomReserveFile struct {
 
 //RoomReserveListJSON RoomReserveListJSON
 type RoomReserveListJSON struct {
-	RoomList *[]Room
-	Paging   string
-	Page     uint
-	PerPage  uint
+	RoomReserveList *[]RoomReserve
+	Paging          string
+	Page            uint
+	PerPage         uint
 }
 
 func init() {
@@ -64,6 +64,14 @@ func GetReserveFile(ID int) (rev *RoomReserveFile, errRet error) {
 	RoomReserveFile := &RoomReserveFile{}
 	o := orm.NewOrm()
 	o.QueryTable("room_reserve_file").Filter("ID", ID).RelatedSel().One(RoomReserveFile)
+	return RoomReserveFile, errRet
+}
+
+//GetReserveFileList -
+func GetReserveFileList(ID int) (rev *[]RoomReserveFile, errRet error) {
+	RoomReserveFile := &[]RoomReserveFile{}
+	o := orm.NewOrm()
+	o.QueryTable("room_reserve_file").Filter("ID", ID).RelatedSel().All(RoomReserveFile)
 	return RoomReserveFile, errRet
 }
 
@@ -88,4 +96,37 @@ func DeleteReserveFile(ID int) (errRet error) {
 		_ = num
 	}
 	return errRet
+}
+
+//GetReserveRoom -
+func GetReserveRoom(ID int) (rev *RoomReserve, errRet error) {
+	RoomReserve := &RoomReserve{}
+	o := orm.NewOrm()
+	o.QueryTable("room_reserve").Filter("ID", ID).RelatedSel().One(RoomReserve)
+	if RoomReserve.ID != 0 {
+		file, _ := GetReserveFileList(RoomReserve.ID)
+		RoomReserve.RoomReserveFile = *file
+	}
+	return RoomReserve, errRet
+}
+
+//CreateReserveRoom _
+func CreateReserveRoom(RoomReserve RoomReserve) (ID int64, err error) {
+	o := orm.NewOrm()
+	o.Begin()
+	ID, err = o.Insert(&RoomReserve)
+	o.Commit()
+	return ID, err
+}
+
+//UpdateReserveRoom _
+func UpdateReserveRoom(RoomReserve RoomReserve) (err error) {
+	room, _ := GetReserveRoom(RoomReserve.ID)
+	RoomReserve.CreatedAt = room.CreatedAt
+	RoomReserve.Creator = room.Creator
+	o := orm.NewOrm()
+	o.Begin()
+	_, err = o.Update(&RoomReserve)
+	o.Commit()
+	return err
 }

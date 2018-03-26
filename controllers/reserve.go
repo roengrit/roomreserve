@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/astaxie/beego"
+	"github.com/go-playground/form"
 	"github.com/google/uuid"
 )
 
@@ -20,9 +21,80 @@ type ReserveController struct {
 
 //Get -
 func (c *ReserveController) Get() {
-	//roleID, _ := strconv.ParseInt(c.Ctx.Request.URL.Query().Get("id"), 10, 32)
+	ID, _ := strconv.ParseInt(c.Ctx.Request.URL.Query().Get("id"), 10, 32)
 	c.Data["title"] = "รายละเอียดการจอง"
-	c.Data["ret"] = models.RetModel{}
+	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
+	if ID != 0 {
+		reserv, _ := models.GetReserveRoom(int(ID))
+		c.Data["m"] = reserv
+	}
+	c.Layout = "layout.html"
+	c.TplName = "reserve/reserve.html"
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["scripts"] = "reserve/reserve-js.html"
+	c.Render()
+}
+
+//Post -
+func (c *ReserveController) Post() {
+	var reserve models.RoomReserve
+	decoder := form.NewDecoder()
+	err := decoder.Decode(&reserve, c.Ctx.Request.Form)
+	ret := models.RetModel{RetOK: true}
+	actionUser, _ := models.GetUser(helpers.GetUser(c.Ctx.Request))
+
+	if ret.RetOK && err == nil {
+		reserve.DateBegin, err = helpers.CreateDateTimeFromString(c.GetString("DateBegin"))
+		if err != nil {
+			ret.RetOK = false
+			ret.RetData = err.Error()
+		}
+	}
+
+	if ret.RetOK && err == nil {
+		reserve.DateEnd, err = helpers.CreateDateTimeFromString(c.GetString("DateEnd"))
+		if err != nil {
+			ret.RetOK = false
+			ret.RetData = err.Error()
+		}
+	}
+
+	if err == nil {
+		if reserve.ID == 0 {
+			reserve.CreatedAt = time.Now()
+			reserve.Creator = &actionUser
+			if ID, err := models.CreateReserveRoom(reserve); err == nil {
+				reserve.ID = int(ID)
+				ret.RetOK = true
+				ret.RetData = "บันทึกสำเร็จ"
+			} else {
+				ret.RetOK = false
+				ret.RetData = err.Error()
+			}
+		} else {
+			reserve.EditedAt = time.Now()
+			reserve.Editor = &actionUser
+			if err := models.UpdateReserveRoom(reserve); err == nil {
+				ret.RetOK = true
+				ret.RetData = "บันทึกสำเร็จ"
+			} else {
+				ret.RetOK = false
+				ret.RetData = err.Error()
+			}
+		}
+	} else {
+		ret.RetOK = false
+		ret.RetData = "เกิดข้อผิดพลาด"
+	}
+	if reserve.ID != 0 {
+		reserv, _ := models.GetReserveRoom(int(reserve.ID))
+		c.Data["m"] = reserv
+	} else {
+		c.Data["m"] = reserve
+	}
+
+	c.Data["ret"] = ret
+	c.Data["title"] = "รายละเอียดการจอง"
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layout.html"
 	c.TplName = "reserve/reserve.html"

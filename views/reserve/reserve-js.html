@@ -1,4 +1,57 @@
 <script>
+    var docID = '{{.m.ID}}';
+    localStorage.setItem("DateBegin", "12/03/2561 07:30");
+    localStorage.setItem("DateEnd", "12/03/2561 21:30");
+    localStorage.setItem("RoomID", 10);
+    localStorage.setItem("RoomName", "พระยาศรีวิสารวาจา");
+    localStorage.setItem("RoomImage", "https://images.unsplash.com/photo-1439798060585-62ab242d7724?crop=entropy&fit=crop&fm=jpg&h=400&ixjsv=2.1.0&ixlib=rb-0.3.5&q=80&w=600");
+    localStorage.setItem("RoomSupport", "20 ที่นั่ง");
+    if (docID == '' || docID == '0') {
+        var DateBegin = localStorage.getItem("DateBegin");
+        var DateEnd = localStorage.getItem("DateEnd");
+        var RoomID = localStorage.getItem("RoomID");
+        var RoomName = localStorage.getItem("RoomName");
+        var RoomImage = localStorage.getItem("RoomImage");
+        var RoomSupport = localStorage.getItem("RoomSupport");
+
+        var spDateBegin = DateBegin.split('/');
+        var spDateEnd = DateEnd.split('/');
+        var day = parseInt(spDateBegin[0]);
+        var month = parseInt(spDateBegin[1]);
+        var year = parseInt(spDateBegin[2]);
+
+        $('#DateBegin').val('' + (year - 543) + '-' + month + '-' + day);
+        $('#DateBeginText').html(DateBegin.split(' ')[0])
+        $('#TimeBeginText').html(DateBegin.split(' ')[1])
+        day = parseInt(spDateEnd[0]);
+        month = parseInt(spDateEnd[1]);
+        year = parseInt(spDateEnd[2]);
+        $('#DateEnd').val('' + (year - 543) + '-' + month + '-' + day);
+        $('#DateEndText').html(DateEnd.split(' ')[0])
+        $('#TimeEndText').html(DateEnd.split(' ')[1])
+
+        $('#RoomID').val(RoomID);
+        $('#RoomImage').attr('src', RoomImage);
+        $('#RoomName').html(RoomName);
+        $('#SupportText').html(RoomSupport)
+        $('#file-att-area').hide();
+    }
+
+    $("#Status").val('{{.m.Status}}');
+    if ($("#Status").val() == '' || $("#Status").val() == null) {
+        $("#Status").val($("#Status option:first").val());
+    } 
+
+    $("#HideTitle").val('{{.m.HideTitle}}');
+    if ($("#HideTitle").val() == '' || $("#HideTitle").val() == null) {
+        $("#HideTitle").val($("#HideTitle option:first").val());
+    }
+
+    $("#HideFile").val('{{.m.HideFile}}');
+    if ($("#HideFile").val() == '' || $("#HideFile").val() == null) {
+        $("#HideFile").val($("#HideFile option:first").val());
+    }
+
     $(".addmore").on('click', function () {
         var html = `
         <tr> <td>
@@ -16,7 +69,7 @@
         </td>
         </tr>
         `;
-       
+
         $('#file-area').prepend(html);
         $('#file-open').change(function () {
             $('#doc-id').val($('#ID').val())
@@ -42,13 +95,13 @@
                 console.log(datas);
                 if (datas.RetOK) {
                     $('#form-upload').parent().parent().html(
-                        `<td id=file-`+ datas.ID +`>
+                        `<td id=file-` + datas.ID + `>
                            <a style="margin-right:15px;" href="/reserve/dowload/`+ datas.ID + `">` + datas.Name + `</a>
                         </td>
                         <td >
                            <a  href="javascript:void(0)" onclick="confirmDelete(`+ datas.ID + `,'/reserve/delete/file')"><i class="fa fa-trash"></i></a>
                         </td>`
-                    ); 
+                    );
                 } else {
                     $form.find('.progress-bar').removeClass('progress-bar-success').removeClass('progress-bar-danger');
                     $form.find('.progress-bar').addClass('progress-bar-danger');
@@ -59,12 +112,12 @@
                 }
             },
             error: function () {
-                    $form.find('.progress-bar').removeClass('progress-bar-success').removeClass('progress-bar-danger');
-                    $form.find('.progress-bar').addClass('progress-bar-danger');
-                    $form.find('.progress-bar').width(100 + '%').html("เกิดข้อผิดพลาด");
-                    setTimeout(function () {
-                        $('#form-upload').parent().parent().remove();
-                    }, 2000);
+                $form.find('.progress-bar').removeClass('progress-bar-success').removeClass('progress-bar-danger');
+                $form.find('.progress-bar').addClass('progress-bar-danger');
+                $form.find('.progress-bar').width(100 + '%').html("เกิดข้อผิดพลาด");
+                setTimeout(function () {
+                    $('#form-upload').parent().parent().remove();
+                }, 2000);
             },
             xhr: function () {
                 xhr.upload.addEventListener("progress", function (e) {
@@ -80,11 +133,11 @@
             }
 
         });
-    } 
-    function confirmDelete(id,url) {
+    }
+    function confirmDelete(id, url) {
         hideTopAlert();
         $('#delete-modal').hide();
-        $.get("/service/secure/json" , function (data) {
+        $.get("/service/secure/json", function (data) {
             $("#delete-xsrf").val(data)
         });
         $("#delete-id").val(id)
@@ -94,7 +147,7 @@
     function deleteFile() {
         hideTopAlert();
         $.ajax({
-            url: $("#delete-url").val() + "/" + $("#delete-id").val() ,
+            url: $("#delete-url").val() + "/" + $("#delete-id").val(),
             type: 'DELETE',
             beforeSend: function (xhr) { xhr.setRequestHeader('X-Xsrftoken', $("#delete-xsrf").val()); },
             success: function (data) {
@@ -108,8 +161,8 @@
             }
         });
     }
-        function showDelete(msg) {
-            $("#delete-alert").html(msg);
-            $("#delete-alert").show();
-        }
+    function showDelete(msg) {
+        $("#delete-alert").html(msg);
+        $("#delete-alert").show();
+    }
 </script>

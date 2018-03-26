@@ -48,7 +48,7 @@ func main() {
 	beego.Router("/role/?:id", &c.RoleController{}, "get:Get;post:Post;delete:Delete")
 	beego.Router("/role/list", &c.RoleController{}, "get:RoleList;post:GetRoleListJSON")
 
-	beego.Router("/reserve/?:id", &c.ReserveController{}, "get:Get")
+	beego.Router("/reserve/?:id", &c.ReserveController{}, "get:Get;post:Post")
 	beego.Router("/reserve/file", &c.ReserveController{}, "post:FileAtt")
 	beego.Router("/reserve/dowload/?:id", &c.ReserveController{}, "get:FileDownload")
 	beego.Router("/reserve/delete/file/?:id", &c.ReserveController{}, "delete:FileDelete")
