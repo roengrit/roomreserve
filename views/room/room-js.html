@@ -18,16 +18,17 @@
     }
     function LoadData() {
         url = $('#ListForm').attr('action');
-        $('#RetData').fadeOut(100);
         $.post(url, $('#ListForm').serialize(), function (data) {
-            $('#RetData').html('');
+            //$('#RetData').html('');
+            //$('#Pagination').html('');
             if (data.RoomList == null) {
                 $('#RetCount').html('ไม่มีข้อมูลที่ค้นหา');
                 return;
             }
+            var dataHtml = '';
             data.RoomList.forEach(dat => {
                 var imagePath = dat.ImagePath1 == '' || dat.ImagePath1 == undefined ? '/static/image/600_x_400.png' : dat.ImagePath1;
-                $('#RetData').append(`
+                dataHtml+= `
                 <tr>
                             <td valign="top" style=" cursor: pointer;">
                                 <div class="media">
@@ -59,11 +60,25 @@
                                     </div>
                             </td> 
                         </tr>
-                `);
+                `;
+                //$('#RetData').append();
             });
+            
             $('#RetCount').html('ค้นเจอทั้งหมด ' + data.Page + ' รายการ');
-            $('#Pagination').html(data.Paging)
-            $('#RetData').fadeIn(100);
+
+            $('#RetData').fadeOut(500,function(){
+                $('#RetData').html('');
+                $('#RetData').html(dataHtml);
+            });          
+            $('#Pagination').fadeOut(500,function(){
+                $('#Pagination').html('');
+            });      
+            $('#RetData').fadeIn(500,function(){
+              
+            });
+            $('#Pagination').fadeIn(500,function(){
+                $('#Pagination').html(data.Paging);
+            });
         });
     }
     LoadData();

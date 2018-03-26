@@ -24,6 +24,7 @@ type RoomReserve struct {
 	DateBegin       time.Time
 	DateEnd         time.Time
 	Remark          string            `orm:"size(300)"`
+	Room            *Room             `orm:"rel(fk)"`
 	Creator         *User             `orm:"rel(fk)"`
 	CreatedAt       time.Time         `orm:"auto_now_add;type(datetime)"`
 	Editor          *User             `orm:"null;rel(fk)"`

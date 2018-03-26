@@ -28,7 +28,10 @@
     <form {{if .r }} {{else }} action="/room" {{end}} autocomplete="off" enctype="multipart/form-data" id="create-form" method="post">
         {{ .xsrfdata }}
         
-        <input type="hidden" id="ID" name="ID" value="1" />
+        <input type="hidden" id="ID" name="ID" value="{{.m.ID}}" />
+        <input type="hidden" id="DateBegin" name="DateBegin" value="{{.m.DateBegin}}" />
+        <input type="hidden" id="DateEnd" name="DateEnd" value="{{.m.DateEnd}}" />
+        <input type="hidden" id="Room.ID" name="Room.ID" value="{{.m.Room.ID}}" />
 
         <div id="box-req" class="box box-primary">
             <div class="box-body">
@@ -43,14 +46,14 @@
                                 <tbody class="no-border-x no-border-y">
                                     <tr valign="top">
                                         <td>
-                                            <h1 class="name" style="margin-top: 5px;margin-bottom:20px;">พระยาศรีวิสารวาจา</h1>
+                                            <h1 class="name" id="RoomName" style="margin-top: 5px;margin-bottom:20px;">พระยาศรีวิสารวาจา</h1>
                                             <div style="font-size:20px;margin-bottom:15px;">
-                                                <strong>จำนวนที่นั่ง : </strong>20
-                                                <strong>ที่นั่ง</strong>
+                                                <strong>จำนวนที่นั่ง : </strong> <span id="SupportText"> {{.m.Room.SupportText}} </span>
+                                              
                                                 <br>
-                                                <strong>วันที่ใช้ห้อง : </strong> 01 มี.ค. 61 เวลา 08:00
+                                                <strong>วันที่ใช้ห้อง : </strong> <span id="DateBeginText"> {{.m.Room.SupportText}} </span>  เวลา <span id="TimeBeginText"> {{.m.Room.SupportText}} </span>
                                                 <br>
-                                                <strong>ถึงวันที่ : </strong> 01 มี.ค. 61 เวลา 17:00
+                                                <strong>ถึงวันที่ : </strong> <span id="DateEndText"> {{.m.Room.SupportText}} </span>  เวลา <span id="TimeEndText"> {{.m.Room.SupportText}} </span>
                                                 <br>
                                             </div>                                            
                                         </td>
