@@ -3,6 +3,9 @@
         clear: both;
         margin-bottom: 80px;
     }
+    .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+        background-color:white;
+    }
 </style>
 <section class="content-header">
     {{if .ret.RetOK }} {{if .ret.RetData}}
@@ -29,8 +32,11 @@
         {{ .xsrfdata }}
 
         <input type="hidden" id="ID" name="ID" value="{{.m.ID}}" />
-        <input type="hidden" id="DateBegin" name="DateBegin" value='{{date .m.DateBegin "Y-m-d H:i"}}' />
-        <input type="hidden" id="DateEnd" name="DateEnd" value='{{date .m.DateEnd "Y-m-d H:i"}}' />
+         {{if .m.DateBegin}}
+        <input type="hidden" id="DateBegin" name="DateBegin" value='{{date .m.DateBegin "Y-m-d H:i"}}' /> {{else}}
+        <input type="hidden" id="DateBegin" name="DateBegin" value='' /> {{end}} {{if .m.DateBegin}}
+        <input type="hidden" id="DateEnd" name="DateEnd" value='{{date .m.DateEnd "Y-m-d H:i"}}' /> {{else}}
+        <input type="hidden" id="DateEnd" name="DateEnd" value='' /> {{end}}
         <input type="hidden" id="RoomID" name="Room.ID" value="{{.m.Room.ID}}" />
 
         <div id="box-req" class="box box-primary">
@@ -53,12 +59,23 @@
 
                                             <br>
                                             <strong>วันที่ใช้ห้อง : </strong>
-                                            <span id="DateBeginText"> {{.m.Room.SupportText}} </span> เวลา
-                                            <span id="TimeBeginText"> {{.m.Room.SupportText}} </span>
+                                            {{if .m.DateBegin}}
+                                                <span id="DateBeginText"> {{ date (.m.DateBegin  ) "d/m/Y"}} </span> เวลา
+                                                <span id="TimeBeginText"> {{date .m.DateBegin "H:i"}} </span>
+                                            {{else}}
+                                                <span id="DateBeginText">   </span> เวลา
+                                                <span id="TimeBeginText">   </span>
+                                            {{end}}
                                             <br>
                                             <strong>ถึงวันที่ : </strong>
-                                            <span id="DateEndText"> {{.m.Room.SupportText}} </span> เวลา
-                                            <span id="TimeEndText"> {{.m.Room.SupportText}} </span>
+                                            {{if .m.DateBegin}}
+                                            <span id="DateEndText"> {{date (.m.DateEnd  ) "d/m/Y"}} </span> เวลา
+                                            <span id="TimeEndText"> {{date .m.DateEnd "H:i"}} </span>
+                                            {{else}}
+                                            <span id="DateEndText">  </span> เวลา
+                                            <span id="TimeEndText">  </span>
+                                            {{end}}
+                                         
                                             <br>
                                         </div>
                                     </td>
@@ -70,12 +87,50 @@
                         <table class="no-border no-strip skills">
                             <h3 class="name" style="margin-top:15px;margin-bottom:20px;">ไฟล์แนบ</h3>
                             <tbody class="no-border-x no-border-y" id="file-area">
-                                <tr valign="top">
-                                    <td>
-                                        <button class="btn btn-success btn-xs addmore" type="button">
-                                            <i class="fa fa-plus"></i> เพิ่มไฟล์</button>
-                                    </td>
-                                </tr>
+                            {{if .m.ID}}    
+                                    {{if ( eq .editUser 1)}} 
+                                        {{range $key, $val := .m.RoomReserveFile}}
+                                        <tr valign="top">
+                                            <td id='file-{{$val.ID}}'>
+                                                <a style="margin-right:15px;" href="/reserve/dowload/{{$val.ID}}">{{$val.FileName}}</a>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0)" onclick="confirmDelete('{{$val.ID}}','/reserve/delete/file')">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {{end}}
+                                    {{else}}
+                                        {{if (eq .m.HideFile 1) and (eq .editUser 0)}}
+                                            <tr valign="top">
+                                                <td  >
+                                                     ต้องเข้าสู่ระบบก่อนดาวน์โหลดไฟล์
+                                                </td>
+                                                <td>
+                                                     
+                                                </td>
+                                            </tr>  
+                                           {{else}}
+                                                    {{range $key, $val := .m.RoomReserveFile}}
+                                                    <tr valign="top">
+                                                        <td id='file-{{$val.ID}}'>
+                                                            <a style="margin-right:15px;" href="/reserve/dowload/{{$val.ID}}">{{$val.FileName}}</a>
+                                                        </td>
+                                                    </tr>
+                                            {{end}}
+                                        {{end}}
+                                    {{end}} 
+
+                                    {{if ( eq .editUser 1)}}
+                                    <tr valign="top">
+                                        <td>
+                                            <button class="btn btn-success btn-xs addmore" type="button">
+                                                <i class="fa fa-plus"></i> เพิ่มไฟล์</button>
+                                        </td>
+                                    </tr>
+                                    {{end}}
+                            {{end}}
                             </tbody>
                         </table>
                     </div>
@@ -88,8 +143,16 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-file-text-o"></i>
                                 </span>
-                                <input type="text" id="Name" required name="Title" class="form-control" autocomplete="off" placeholder="หัวข้อการประชุม"
+                                {{if  (not .m.HideTitle)  }}
+                                <input type="text" id="Name" required {{.r}} name="Title" class="form-control" autocomplete="off" placeholder="หัวข้อการประชุม"
                                     value="{{.m.Title}}">
+                                {{else if  (eq .editUser 1)}}
+                                <input type="text" id="Name" required {{.r}} name="Title" class="form-control" autocomplete="off" placeholder="หัวข้อการประชุม"
+                                    value="{{.m.Title}}">
+                                    {{else}}
+                                    <input type="text" id="Name" required {{.r}} name="Title" class="form-control" autocomplete="off" placeholder="หัวข้อการประชุม"
+                                    value="หัวข้อการประชุมถูกปกปิด">
+                                {{end}}
                             </div>
                         </div>
                     </div>
@@ -102,7 +165,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-file-text-o"></i>
                                 </span>
-                                <input type="text" id="Lecturer"   name="Lecturer" class="form-control" autocomplete="off" placeholder="ประธานการประชุม/วิทยากร"
+                                <input type="text" id="Lecturer" {{.r}}  name="Lecturer" class="form-control" autocomplete="off" placeholder="ประธานการประชุม/วิทยากร"
                                     value="{{.m.Lecturer}}">
                             </div>
                         </div>
@@ -116,7 +179,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-file-text-o"></i>
                                 </span>
-                                <input type="number" id="MemberCount" name="MemberCount" class="form-control" autocomplete="off" placeholder="จำนวนผู้เข้าร่วมประชุม"
+                                <input type="number" id="MemberCount" {{.r}} name="MemberCount" class="form-control" autocomplete="off" placeholder="จำนวนผู้เข้าร่วมประชุม"
                                     value="{{.m.MemberCount}}">
                             </div>
                         </div>
@@ -130,7 +193,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-align-left"></i>
                                 </span>
-                                <textarea class="form-control" id="MemberText" name="MemberText" rows="3" placeholder="ผู้เข้าประชุม">{{.m.MemberText}}</textarea>
+                                <textarea class="form-control" id="MemberText" {{.r}} name="MemberText" rows="3" placeholder="ผู้เข้าประชุม">{{.m.MemberText}}</textarea>
                             </div>
                         </div>
                     </div>
@@ -143,7 +206,7 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-align-left"></i>
                                 </span>
-                                <textarea class="form-control" id="DeviceAddOnText" name="DeviceAddOnText" rows="3" placeholder="อุปกรณ์ที่ต้องการ">{{.m.DeviceAddOnText}}</textarea>
+                                <textarea class="form-control" id="DeviceAddOnText" {{.r}} name="DeviceAddOnText" rows="3" placeholder="อุปกรณ์ที่ต้องการ">{{.m.DeviceAddOnText}}</textarea>
                             </div>
                         </div>
                     </div>
@@ -156,24 +219,39 @@
                                 <span class="input-group-addon">
                                     <i class="fa fa-file-text-o"></i>
                                 </span>
-                                <input type="text" id="Coordinate" name="Coordinate" class="form-control" autocomplete="off" placeholder="ผู้ประสานงาน/เบอร์โทร"
+                                <input type="text" id="Coordinate" name="Coordinate" {{.r}} class="form-control" autocomplete="off" placeholder="ผู้ประสานงาน/เบอร์โทร"
                                     value="{{.m.Coordinate}}">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row"
+                 {{if not ( eq .editUser 1)}}
+                 style="display:none;"
+                 {{end}}
+                >
                     <div class="form-group req-box-form">
                         <div class="col-xs-4">
                             <label for="req-name">สถานะ</label>
-                            <select class="form-control" id="Status" name="Status">
+                            <select class="form-control" id="Status"
+                            {{if .m.Status}}
+                            {{if eq .m.Status 0 }}
+                              disabled
+                            {{end}}
+                            {{end}}
+                            name="Status">
                                 <option value="1">ปกติ</option>
                                 <option value="0">ยกเลิก</option>
                             </select>
                         </div>
+                        
                         <div class="col-xs-4">
                             <label for="req-name">ซ่อนหัวข้อการประชุม</label>
-                            <select class="form-control" id="HideTitle" name="HideTitle">
+                            <select class="form-control" id="HideTitle"
+                            {{if not .hideTitle }}
+                              disabled
+                            {{end}}
+                            name="HideTitle">
                                 <option value="1">แสดง</option>
                                 <option value="0">ซ่อน</option>
                             </select>
@@ -188,10 +266,12 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    {{if .r}} {{else}}
-                    <button type="submit" class="btn btn-primary pull-right">บันทึก</button>
-                    <a href="/room/list" class="btn btn-default pull-right" style="margin-right:3px;">ยกเลิก</a>
-                    {{end}}
+                    
+                      {{if ( eq .editUser 1) or ( eq .m.ID 0)}}
+                       <button type="submit" class="btn btn-primary pull-right">บันทึก</button>
+                      {{end}}
+                    <a href="/" class="btn btn-default pull-right" style="margin-right:3px;">ค้นหาอีกครั้ง</a>
+                  
                 </div>
             </div>
     </form>

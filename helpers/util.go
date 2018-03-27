@@ -70,3 +70,8 @@ func CreateDateTimeFromString(dateTimeStr string) (dateTime time.Time, err error
 	}
 	return time.Date(int(year), time.Month(month), int(day), hh, mm, 0, 0, time.Now().Location()), nil
 }
+
+//AddToThaiYear -
+func AddToThaiYear(dateTime time.Time) time.Time {
+	return dateTime.AddDate(543, 0, 0)
+}

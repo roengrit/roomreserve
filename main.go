@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	c "roomreserve/controllers"
+	"roomreserve/helpers"
 	_ "roomreserve/models"
 
 	"github.com/astaxie/beego"
@@ -52,5 +53,8 @@ func main() {
 	beego.Router("/reserve/file", &c.ReserveController{}, "post:FileAtt")
 	beego.Router("/reserve/dowload/?:id", &c.ReserveController{}, "get:FileDownload")
 	beego.Router("/reserve/delete/file/?:id", &c.ReserveController{}, "delete:FileDelete")
+
+	beego.AddFuncMap("AddToThaiYear", helpers.AddToThaiYear)
+
 	beego.Run()
 }

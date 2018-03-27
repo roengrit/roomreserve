@@ -20,13 +20,13 @@
         var month = parseInt(spDateBegin[1]);
         var year = parseInt(spDateBegin[2]);
 
-        $('#DateBegin').val('' + (year - 543) + '-' + month + '-' + day);
+        $('#DateBegin').val('' + (year - 543) + '-' + month + '-' + day + ' ' + DateBegin.split(' ')[1]);
         $('#DateBeginText').html(DateBegin.split(' ')[0])
         $('#TimeBeginText').html(DateBegin.split(' ')[1])
         day = parseInt(spDateEnd[0]);
         month = parseInt(spDateEnd[1]);
         year = parseInt(spDateEnd[2]);
-        $('#DateEnd').val('' + (year - 543) + '-' + month + '-' + day);
+        $('#DateEnd').val('' + (year - 543) + '-' + month + '-' + day + ' ' + DateEnd.split(' ')[1]);
         $('#DateEndText').html(DateEnd.split(' ')[0])
         $('#TimeEndText').html(DateEnd.split(' ')[1])
 
@@ -152,7 +152,6 @@
             beforeSend: function (xhr) { xhr.setRequestHeader('X-Xsrftoken', $("#delete-xsrf").val()); },
             success: function (data) {
                 if (data.RetOK) {
-                    showTopAlert(data.RetData, "success");
                     $("#delete-modal").modal("hide");
                     $('#file-' + $("#delete-id").val()).parent().remove();
                 } else {

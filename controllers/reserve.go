@@ -24,10 +24,19 @@ func (c *ReserveController) Get() {
 	ID, _ := strconv.ParseInt(c.Ctx.Request.URL.Query().Get("id"), 10, 32)
 	c.Data["title"] = "รายละเอียดการจอง"
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
+	actionUser, _ := models.GetUser(helpers.GetUser(c.Ctx.Request))
+	c.Data["editUser"] = 0
+	c.Data["r"] = "readonly"
 	if ID != 0 {
 		reserv, _ := models.GetReserveRoom(int(ID))
 		c.Data["m"] = reserv
+		if reserv.Creator.ID == actionUser.ID {
+			c.Data["editUser"] = 1
+			c.Data["r"] = ""
+		}
 	}
+	c.Data["username"] = helpers.GetUser(c.Ctx.Request)
+	c.Data["userimg"] = helpers.GetUserImage(c.Ctx.Request)
 	c.Layout = "layout.html"
 	c.TplName = "reserve/reserve.html"
 	c.LayoutSections = make(map[string]string)
@@ -42,7 +51,10 @@ func (c *ReserveController) Post() {
 	err := decoder.Decode(&reserve, c.Ctx.Request.Form)
 	ret := models.RetModel{RetOK: true}
 	actionUser, _ := models.GetUser(helpers.GetUser(c.Ctx.Request))
-
+	if actionUser.ID == 0 {
+		ret.RetOK = false
+		ret.RetData = "กรุณาเข้าสู่ระบบ"
+	}
 	if ret.RetOK && err == nil {
 		reserve.DateBegin, err = helpers.CreateDateTimeFromString(c.GetString("DateBegin"))
 		if err != nil {
@@ -74,13 +86,25 @@ func (c *ReserveController) Post() {
 		} else {
 			reserve.EditedAt = time.Now()
 			reserve.Editor = &actionUser
-			if err := models.UpdateReserveRoom(reserve); err == nil {
-				ret.RetOK = true
-				ret.RetData = "บันทึกสำเร็จ"
+
+			if chk, chkErr := models.GetReserveRoom(reserve.ID); chkErr == nil {
+				if chk.Creator.ID == actionUser.ID {
+					if err := models.UpdateReserveRoom(reserve); err == nil {
+						ret.RetOK = true
+						ret.RetData = "บันทึกสำเร็จ"
+					} else {
+						ret.RetOK = false
+						ret.RetData = err.Error()
+					}
+				} else {
+					ret.RetOK = false
+					ret.RetData = "คุณไม่มีสิทธิ์ในเอกสารฉบับนี้"
+				}
 			} else {
 				ret.RetOK = false
-				ret.RetData = err.Error()
+				ret.RetData = "ไม่พบข้อมูล"
 			}
+
 		}
 	} else {
 		ret.RetOK = false
@@ -147,9 +171,17 @@ func (c *ReserveController) FileAtt() {
 func (c *ReserveController) FileDownload() {
 	id := c.Ctx.Input.Param(":id")
 	ID, _ := strconv.ParseInt(id, 10, 32)
+	actionUser, _ := models.GetUser(helpers.GetUser(c.Ctx.Request))
 	file, err := models.GetReserveFile(int(ID))
 	if err == nil {
-		c.Ctx.Output.Download(file.FilePath1, file.FileName)
+		reserve, err := models.GetReserveRoom(file.ReserveID)
+		if err == nil {
+			if reserve.HideFile == 1 && actionUser.ID != 0 {
+				c.Ctx.Output.Download(file.FilePath1, file.FileName)
+			} else if reserve.HideFile == 0 {
+				c.Ctx.Output.Download(file.FilePath1, file.FileName)
+			}
+		}
 	}
 }
 

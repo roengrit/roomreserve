@@ -47,6 +47,12 @@ func (b *BaseController) Prepare() {
 				b.Ctx.Redirect(302, "/?err=คุณไม่มีสิทธิ์ใช้งาน")
 			}
 		}
+		if strings.Contains(b.Ctx.Request.URL.Path, "reserve") {
+			user, _ := models.GetUserByUserName(h.GetUser(b.Ctx.Request))
+			s := strings.Split(user.Role.Access, ",")
+			user.Role.User, user.Role.Role, user.Role.Room, user.Role.HideTitle = s[0], s[1], s[2], s[3]
+			b.Data["hideTitle"] = user.Role.HideTitle
+		}
 	}
 
 }

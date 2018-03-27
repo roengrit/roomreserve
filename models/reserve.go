@@ -71,7 +71,7 @@ func GetReserveFile(ID int) (rev *RoomReserveFile, errRet error) {
 func GetReserveFileList(ID int) (rev *[]RoomReserveFile, errRet error) {
 	RoomReserveFile := &[]RoomReserveFile{}
 	o := orm.NewOrm()
-	o.QueryTable("room_reserve_file").Filter("ID", ID).RelatedSel().All(RoomReserveFile)
+	o.QueryTable("room_reserve_file").Filter("reserve_i_d", ID).RelatedSel().All(RoomReserveFile)
 	return RoomReserveFile, errRet
 }
 

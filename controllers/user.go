@@ -63,6 +63,9 @@ func (c *UserController) Post() {
 	} else {
 		c.Data["error"] = err
 	}
+	if c.GetString("ref") != "" {
+		c.Data["ref"] = c.GetString("ref")
+	}
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["username"] = c.GetString("username")
 	c.Data["title"] = "เข้าสู่ระบบเพื่อเริ่มการทำงาน"

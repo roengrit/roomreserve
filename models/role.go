@@ -16,6 +16,7 @@ type Role struct {
 	User      string    `orm:"-"`
 	Role      string    `orm:"-"`
 	Room      string    `orm:"-"`
+	HideTitle string    `orm:"-"`
 	Creator   *User     `orm:"rel(fk)"`
 	CreatedAt time.Time `orm:"auto_now_add;type(datetime)"`
 	Editor    *User     `orm:"null;rel(fk)"`
