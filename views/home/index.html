@@ -48,9 +48,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="row " style="margin-top:10px;text-align:center; ">
+	<div class="row " id="room-area" style="margin-top:10px;text-align:center; display:none;">
 		<div class="col-xs-8">
-			 
 			<select class="room" id="Room" name="Room">
 				<option value="">เลือกห้อง</option>
 				{{range $key, $val := .room}}
@@ -66,18 +65,18 @@
 			</select>
 		</div>
 	</div>
-	<div class="row " style="margin-top:10px;text-align:center; ">
+	<div id="search-area" class="row " style="margin-top:10px;text-align:center; display:none; ">
 			<div class="col-xs-12">
 			<input type="text" id="Title" style="text-align:center" placeholder="วาระการประชุม/หัวข้อ" class="form-control">
 			</div>
 	</div>
-	<div class="row" style="margin-top:10px;text-align:center;">
+	<div id="button-area" class="row" style="margin-top:10px;text-align:center; display:none;">
 		<button type="submit" class="btn btn-primary">
 			<i class="fa fa-filter"> </i> ค้นหา</button>
 		<button type="button" id="reset" class="btn btn-default">
 			<i class="fa fa-remove"> </i> ล้าง</button>
 	</div>
-	<div class="row" style="margin-top:70px;">
+	<div id="result-area" class="row" style="margin-top:70px; display:none;">
 		<div class="box-body table-responsive no-padding">
 			<table class="table table-hover">
 				<tr>

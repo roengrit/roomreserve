@@ -2,11 +2,15 @@
 <script src="/static/js/datepicker/bootstrap-datepicker-thai.js"></script>
 <script src="/static/js/datepicker/locales/bootstrap-datepicker.th.js"></script>
 <script>
-    $(document).ready(function () {
-        $('.status,.room').select2({
+    $(document).ready(function () {      
+         $('.status,.room').select2({
             multiple:false,
             width: '100%'
-        });
+        });               
+        $('#room-area').fadeIn(900);       
+        $('#search-area').fadeIn(1300);       
+        $('#button-area').fadeIn(1900);  
+        $('#result-area').fadeIn(2300);            
         $('.datepicker').datepicker({
             autoclose: true,
             todayBtn: true,
