@@ -9,14 +9,13 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/astaxie/beego"
 	"github.com/go-playground/form"
 	"github.com/google/uuid"
 )
 
 //ReserveController _
 type ReserveController struct {
-	beego.Controller
+	BaseController
 }
 
 //Get -
@@ -26,13 +25,13 @@ func (c *ReserveController) Get() {
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	actionUser, _ := models.GetUser(helpers.GetUser(c.Ctx.Request))
 	c.Data["editUser"] = 0
-	c.Data["r"] = "readonly"
 	if ID != 0 {
 		reserv, _ := models.GetReserveRoom(int(ID))
 		c.Data["m"] = reserv
 		if reserv.Creator.ID == actionUser.ID {
 			c.Data["editUser"] = 1
-			c.Data["r"] = ""
+		} else {
+			c.Ctx.Redirect(302, "/?err=คุณไม่มีสิทธิ์ในการแก้ใขการจอง")
 		}
 	}
 	c.Data["username"] = helpers.GetUser(c.Ctx.Request)
