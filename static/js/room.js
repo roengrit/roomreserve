@@ -37,24 +37,6 @@ function showGlobalModal()
     $('#global-modal').modal("show");
 }
 
-function showRoom(id)
-{
-    $.get("/room/read/?id="  + id , function (data) {
-        $('#showroom').html(data)  
-    });
-    $('#room-global-modal').attr("style","display:block;");
-    $('#room-global-modal').modal("show");
-}
-
-$('#room-global-modal').on('shown.bs.modal', function() {
-    $('#room-global-modal').attr("style","display:block;")
-})
-
-$('#room-global-modal').on('hide.bs.modal', function() {
-    $('.main-header,.main-footer').show();
-    $('#showroom').html('')  
-})
-
 function confirmDeleteGlobal(id,url) {
     hideTopAlert();
     hideGlobalDelete();

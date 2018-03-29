@@ -47,9 +47,26 @@ type RoomReserveFile struct {
 	EditedAt    time.Time `orm:"null;auto_now;type(datetime)"`
 }
 
+//RoomReserveResult *
+type RoomReserveResult struct {
+	ID              int
+	Name            string
+	SupportText     string
+	LocationText    string
+	AddOnDeviceText string
+	RoomAdminText   string
+	ImagePath1      string
+	Remark          string
+	Status          int
+	ReserveNumber   int
+	Title           string
+	Coordinate      string
+	HasReserve      bool
+}
+
 //RoomReserveListJSON RoomReserveListJSON
 type RoomReserveListJSON struct {
-	RoomReserveList *[]RoomReserve
+	RoomReserveList *[]RoomReserveResult
 	Paging          string
 	Page            uint
 	PerPage         uint
@@ -129,4 +146,57 @@ func UpdateReserveRoom(RoomReserve RoomReserve) (err error) {
 	_, err = o.Update(&RoomReserve)
 	o.Commit()
 	return err
+}
+
+//GetReserveList -
+func GetReserveList(currentPage, lineSize uint, term, status, room, beginDate, endDate string) (num int64, reserveListJSON []RoomReserveResult, err error) {
+	o := orm.NewOrm()
+	var sql = `SELECT
+					room.i_d,
+					room.name,
+					room.support_text,
+					room.location_text,
+					room.add_on_device_text,
+					room.room_admin_text,
+					room.image_path1,
+					room.remark,
+					room.status,  					 
+					(select reserve.i_d 
+						from  room_reserve reserve 
+						where reserve.room_id = room.i_d AND reserve.status = 1
+						AND ('` + beginDate + `' BETWEEN reserve.date_begin AND reserve.date_end  
+						OR '` + endDate + `'    BETWEEN reserve.date_begin AND reserve.date_end)    limit 1
+					) AS reserve_number 
+				FROM
+					room  
+				WHERE 1=1  `
+
+	if status == "0" {
+		sql += ` AND COALESCE((select reserve.i_d 
+							from  room_reserve reserve 
+							where reserve.room_id = room.i_d AND reserve.status = 1
+							AND ('` + beginDate + `' BETWEEN reserve.date_begin AND reserve.date_end  
+						    	OR '` + endDate + `'    BETWEEN reserve.date_begin AND reserve.date_end)    limit 1
+						),0)  <> 1`
+	}
+
+	if room != "" {
+		sql += ` AND room.i_d = ` + room + `  `
+	}
+
+	if status == "0" {
+		sql += ` AND room.status = 1`
+	}
+
+	num, _ = o.Raw(sql).QueryRows(&reserveListJSON)
+	if lineSize+currentPage > uint(num) {
+		lineSize = uint(num)
+	} else if currentPage > 0 {
+		lineSize = lineSize + currentPage
+	}
+	if currentPage > lineSize {
+		currentPage = 0
+	}
+	reserveListJSON = reserveListJSON[currentPage:lineSize]
+	return num, reserveListJSON, err
 }

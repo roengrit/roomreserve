@@ -19,8 +19,6 @@
     function LoadData() {
         url = $('#ListForm').attr('action');
         $.post(url, $('#ListForm').serialize(), function (data) {
-            //$('#RetData').html('');
-            //$('#Pagination').html('');
             if (data.RoomList == null) {
                 $('#RetCount').html('ไม่มีข้อมูลที่ค้นหา');
                 return;
@@ -32,7 +30,7 @@
                 <tr>
                             <td valign="top" style=" cursor: pointer;">
                                 <div class="media">
-                                    <div class="media-left" style="vertical-align:middle" onclick="showRoom(`+ dat.ID +`)">
+                                    <div class="media-left" style="vertical-align:middle"  >
                                         <img class="respondsive" src="`+imagePath+`" style="width: 160px;">
                                     </div>
                                     <div class="media-body">

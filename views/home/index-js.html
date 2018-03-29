@@ -2,6 +2,20 @@
 <script src="/static/js/datepicker/bootstrap-datepicker-thai.js"></script>
 <script src="/static/js/datepicker/locales/bootstrap-datepicker.th.js"></script>
 <script>
+    String.prototype.lpad = function(padString, length) {
+	var str = this;
+    while (str.length < length)
+        str = padString + str;
+    return str;
+}
+ 
+//pads right
+String.prototype.rpad = function(padString, length) {
+	var str = this;
+    while (str.length < length)
+        str = str + padString;
+    return str;
+}
     $(document).ready(function () {      
          $('.status,.room').select2({
             multiple:false,
@@ -30,6 +44,116 @@
         $("#Room").val($("#Room option:first").val()).trigger('change');
         $('#Status').val(0).trigger('change');
         $('#Title').val('')
-    })    
+        $('#timeBegin').timepicker('setTime', new Date(new Date().getTime()));
+        $('#timeEnd').timepicker('setTime', new Date(new Date().getTime()));
+        var todayTime = new Date();
+        var month = ("" + (todayTime.getMonth() + 1)).lpad("0", 2);
+        var day = ("" + todayTime.getDate()).lpad("0", 2);
+        var year = todayTime.getFullYear() + 543;
+        $(".datepicker").val(day + "/" + month + "/" + year );
+    })   
+    $('#submit').click(function(){
+        var dateBeginSp =  (''+ ($('#dateBegin').val())).split('/')
+        $('#dateBeginPost').val(
+            (parseInt(dateBeginSp[2])-543) +        
+             "-"+
+             dateBeginSp[1] +
+             "-" +
+             dateBeginSp[0] +
+             " " +
+             $('#timeBegin').val()
+             );
+        var dateEndSp = (''+  ($('#dateEnd').val())).split('/')
+        $('#dateEndPost').val(
+            (parseInt(dateEndSp[2])-543) +        
+             "-"+
+             dateEndSp[1] +
+             "-" +
+             dateEndSp[0] +
+             " " +
+             $('#timeEnd').val()
+             );
+             LoadData();
+    });   
     });
+    function Paging(page) {
+        $('#Page').val(page);
+        LoadData();
+    }
+    function LoadData() {
+        url = $('#ListForm').attr('action');
+        $.post(url, $('#ListForm').serialize(), function (data) {
+            if (data.RoomReserveList == null) {
+                $('#RetData').fadeOut(200,function(){
+                    $('#RetData').html('');
+                    $('#RetData').html(dataHtml);
+                });          
+                $('#Pagination,#Footer').fadeOut(200,function(){
+                    $('#Pagination').html('');
+                });  
+                return;
+            }
+            var dataHtml = '';
+            data.RoomReserveList.forEach(dat => {
+                var imagePath = dat.ImagePath1 == '' || dat.ImagePath1 == undefined ? '/static/image/600_x_400.png' : dat.ImagePath1;
+                dataHtml+= `
+                <tr>
+                            <td valign="top" style=" cursor: pointer;">
+                                <div class="media">
+                                    <div class="media-left" style="vertical-align:middle" onclick="showRoom(`+ dat.ID +`)">
+                                        <img class="respondsive" src="`+imagePath+`" style="width: 160px;">
+                                    </div>
+                                    <div class="media-body">
+                                        <h3 class="media-heading">`+ dat.Name +
+                                        (dat.ReserveNumber == 0 ? "" : " [#" + dat.ReserveNumber+     "]" )
+                                        +`</h3>
+                                        <p  >
+                                            <span  > <strong>จำนวนที่นั่ง &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.SupportText+` </span>
+                                            <br>
+                                            <strong >อาคาร/สถานที่ &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.LocationText   +`
+                                            <br>
+                                            <strong >สถานะ &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ 
+                                            (dat.Status == 0 ?  (dat.Remark!= ""? "<span class='label label-danger'> "+ dat.Remark +" </span>" : "<span class='label label-danger'> ปิดปรับปรุง </span>"  ) 
+                                            : (dat.ReserveNumber == 0 ? " <span  class='label label-success'  > เปิดใช้งาน </span>" : "<span class='label label-danger'> ถูกจองใช้งาน </span>" ) )
+                                            +`
+                                            <br>
+                                            <strong >ผู้ดูแล/เบอร์โทร &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.RoomAdminText   +`
+                                            </p>
+                                    </div>
+                                </div>
+                            </td>
+                            ` + (dat.ReserveNumber == 0 && dat.Status == 1 ? `
+                                <td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%" onclick='Reserve(`+dat.ID+`)'>
+                                    <i class="fa  fa-angle-right fa-w-8 fa-3x"></i>
+                                </td> 
+                                ` :  
+                                (  dat.ReserveNumber != 0 ?  
+                                `<td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%" onclick='ReserveView(`+dat.ID+`)'>
+                                    <i class="fa   fa-file-text-o fa-w-8 fa-2x"></i>
+                                </td> ` 
+                                :                                
+                                `<td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%" onclick='RoomView(`+dat.ID+`)'>
+                                    <i class="fa  fa-eye fa-w-8 fa-2x"></i>
+                                </td> 
+                                `)) +`
+                        </tr>
+                `;
+                //$('#RetData').append();
+            });
+            
+            $('#RetData').fadeOut(200,function(){
+                $('#RetData').html('');
+                $('#RetData').html(dataHtml);
+            });          
+            $('#Pagination,#Footer').fadeOut(200,function(){
+                $('#Pagination').html('');
+            });      
+            $('#RetData').fadeIn(200,function(){
+              
+            });
+            $('#Pagination,#Footer').fadeIn(200,function(){
+                $('#Pagination').html(data.Paging);
+            });
+        });
+    }
 </script>

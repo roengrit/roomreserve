@@ -3,8 +3,14 @@
 		background-color: white;
 	}
 </style>
-<form action="/">
+<form action="/" id="ListForm">
 
+	<input type="hidden" id="PerPage" name="PerPage" value="5" >
+	<input type="hidden" id="Page" name="Page" value="{{.Page}}" >
+
+	<input type="hidden" id="dateBeginPost" name="dateBeginPost" value="" >
+	<input type="hidden" id="dateEndPost" name="dateEndPost" value="" >
+	
 	<div class="row" style="margin-top:50px;">
 			{{if .err}}
 	    <div id="top-alert">
@@ -19,7 +25,7 @@
 				<div class="input-group-addon">
 					<i class="fa fa-calendar-o"></i>
 				</div>
-				<input type="text" class="form-control datepicker" name="dateBegin" data-provide="datepicker" value='{{date .currentDate "d/m/Y"}}' data-date-language="th-th"  >
+				<input type="text" class="form-control datepicker" id="dateBegin" name="dateBegin" data-provide="datepicker" value='{{date .currentDate "d/m/Y"}}' data-date-language="th-th"  >
 			</div>
 		</div>
 		<div class="col-xs-2">
@@ -35,7 +41,7 @@
 				<div class="input-group-addon">
 					<i class="fa fa-calendar-o"></i>
 				</div>
-				<input type="text" class="form-control datepicker" name="dateEnd" data-provide="datepicker" value='{{date .currentDate "d/m/Y"}}' data-date-language="th-th"  >
+				<input type="text" class="form-control datepicker" id="dateEnd" name="dateEnd" data-provide="datepicker" value='{{date .currentDate "d/m/Y"}}' data-date-language="th-th"  >
 			</div>
 		</div>
 		<div class="col-xs-2">
@@ -60,18 +66,12 @@
 		<div class="col-xs-4">
 			<select class="status" id="Status" name="Status">
 				<option value="0">ห้องว่าง</option>
-				<option value="1">รายการจอง</option>
-				<option value="2">ห้องทั้งหมด</option>
+				<option value="1">ทั้งหมด</option> 
 			</select>
 		</div>
 	</div>
-	<div id="search-area" class="row " style="margin-top:10px;text-align:center; display:none; ">
-			<div class="col-xs-12">
-			<input type="text" id="Title" style="text-align:center" placeholder="วาระการประชุม/หัวข้อ" class="form-control">
-			</div>
-	</div>
 	<div id="button-area" class="row" style="margin-top:10px;text-align:center; display:none;">
-		<button type="submit" class="btn btn-primary">
+		<button type="button" id="submit"  class="btn btn-primary">
 			<i class="fa fa-filter"> </i> ค้นหา</button>
 		<button type="button" id="reset" class="btn btn-default">
 			<i class="fa fa-remove"> </i> ล้าง</button>
@@ -79,51 +79,27 @@
 	<div id="result-area" class="row" style="margin-top:70px; display:none;">
 		<div class="box-body table-responsive no-padding">
 			<table class="table table-hover">
-				<tr>
-					<th>รายละเอียด</th>
-					<th>#</th>
-				</tr>
-				<tr>
-					<td valign="top" style=" cursor: pointer;">
-						<div class="media">
-							<div class="media-left">
-								<img src="/static/image/no-image.jpg" style="width: 100px;">
-							</div>
-							<div class="media-body">
-								<h4 class="media-heading">123/4ก.56</h4>
-								<p>
-									<strong>จำนวนที่นั่ง </strong>1
-									<strong>ที่นั่ง</strong>
-									<br>
-									<strong>อาคาร/สถานที่ </strong>อาคาร 1 @ชั้น 1.1, ผู้ดูแลห้อง: 1.น.ส.พิรารัตย์ เสียงใส&amp; 1.2น.ส.พอใจ พิสุทธิ์ </p>
-							</div>
-						</div>
-					</td>
-					<td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;">
-						<i class="fa  fa-angle-right fa-w-8 fa-3x"></i>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top" style=" cursor: pointer;">
-						<div class="media">
-							<div class="media-left">
-								<img src="/static/image/no-image.jpg" style="width: 100px;">
-							</div>
-							<div class="media-body">
-								<h4 class="media-heading">123/4ก.56</h4>
-								<p>
-									<strong>จำนวนที่นั่ง </strong>1
-									<strong>ที่นั่ง</strong>
-									<br>
-									<strong>อาคาร/สถานที่ </strong>อาคาร 1 @ชั้น 1.1, ผู้ดูแลห้อง: 1.น.ส.พิรารัตย์ เสียงใส&amp; 1.2น.ส.พอใจ พิสุทธิ์ </p>
-							</div>
-						</div>
-					</td>
-					<td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;">
-						<i class="fa  fa-angle-right fa-w-8 fa-3x"></i>
-					</td>
-				</tr>
+				<tbody id="RetData">
+					 
+				</tbody>
 			</table>
+		</div>
+		<div class="box-footer clearfix" id="Footer" style="display:none;">
+			<ul id="Pagination" class="pagination pagination-sm no-margin pull-right">
+				<li><a onclick="Paging('1')" href="javascript:void(0)">First</a></li>
+				<li><a onclick="Paging('{{.Pages.Prev}}')"  href="javascript:void(0)">Prev</a></li>
+				{{range .Pages.Pages 2 2}}
+					{{if eq . 0}}
+					<li><a class="disabled">...</a></li>
+					{{else if eq $.Pages.Page .}}
+					<li class="active">  <a class="active">{{.}}</a>		</li>		 
+					{{else}}
+					  <li > <a onclick="Paging('{{.}}')" href="javascript:void(0)">{{.}}</a></li>
+					{{end}}                    
+				{{end}}
+				<li><a onclick="Paging('{{.Pages.Next}}')" href="javascript:void(0)" >Next</a></li>
+				<li><a onclick="Paging('{{.Pages.MaxPage}}')" href="javascript:void(0)" >Last</a></li>
+			</ul>
 		</div>
 	</div>
 </form>
