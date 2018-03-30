@@ -50,9 +50,11 @@ func main() {
 	beego.Router("/role/list", &c.RoleController{}, "get:RoleList;post:GetRoleListJSON")
 
 	beego.Router("/reserve/?:id", &c.ReserveController{}, "get:Get;post:Post")
+	beego.Router("/reserve/view/?:id", &c.ReserveViewController{}, "get:View")
 	beego.Router("/reserve/file", &c.ReserveController{}, "post:FileAtt")
-	beego.Router("/reserve/dowload/?:id", &c.ReserveController{}, "get:FileDownload")
+	beego.Router("/reserve/dowload/?:id", &c.ReserveViewController{}, "get:FileDownload")
 	beego.Router("/reserve/delete/file/?:id", &c.ReserveController{}, "delete:FileDelete")
+	beego.Router("/reserve/list", &c.MyReserveController{}, "get:Get;post:Post")
 
 	beego.AddFuncMap("AddToThaiYear", helpers.AddToThaiYear)
 

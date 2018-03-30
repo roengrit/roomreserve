@@ -47,6 +47,20 @@ function confirmDeleteGlobal(id,url) {
     $("#global-delete-url").val(url)
     $("#delete-global-modal").modal("show");
 }
+function showRoom(id) {
+    hideTopAlert();
+    $.get("/room/read/?id="+id , function (data) {
+        $("#showroom").html(data)
+   });
+    $("#room-global-modal").modal("show");
+}
+function reserveView(id) {
+    hideTopAlert();
+    $.get("/reserve/view/?id="+id , function (data) {
+        $("#reserve").html(data)
+   });
+    $("#reserve-global-modal").modal("show");
+}
 function deleteGlobal() {
     hideTopAlert();
     $.ajax({

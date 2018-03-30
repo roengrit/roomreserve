@@ -1,0 +1,174 @@
+<script src="/static/js/datepicker/bootstrap-datepicker.js"></script>
+<script src="/static/js/datepicker/bootstrap-datepicker-thai.js"></script>
+<script src="/static/js/datepicker/locales/bootstrap-datepicker.th.js"></script>
+<script>
+    String.prototype.lpad = function(padString, length) {
+	var str = this;
+    while (str.length < length)
+        str = padString + str;
+    return str;
+}
+ 
+//pads right
+String.prototype.rpad = function(padString, length) {
+	var str = this;
+    while (str.length < length)
+        str = str + padString;
+    return str;
+}
+    $(document).ready(function () {      
+         $('.room').select2({
+            multiple:false,
+            width: '100%'
+        });               
+        $('#room-area').fadeIn(500);       
+        $('#search-area').fadeIn(700);       
+        $('#button-area').fadeIn(900);  
+        $('#result-area').fadeIn(1200);            
+        $('.datepicker').datepicker({
+            autoclose: true,
+            todayBtn: true,
+            orientation: "auto",
+            todayHighlight: true,
+            format: 'dd/mm/yyyy'
+        });
+         //Timepicker
+    $('#timeBegin,#timeEnd').timepicker({
+         use24hours: true,
+         format: 'HH:mm',
+         showMeridian: false 
+    }) 
+    $('#reset').click(function(){
+        $('#timeBegin,#timeEnd').val('');
+        $('.datepicker').val('');
+        $("#Room").val($("#Room option:first").val()).trigger('change');
+        $('#Title').val('')
+        $('#timeBegin').timepicker('setTime', new Date(new Date().getTime()));
+        $('#timeEnd').timepicker('setTime', new Date(new Date().getTime()));
+
+        var todayTime = new Date();
+        var month = ("" + (todayTime.getMonth() + 1)).lpad("0", 2);
+        var day = ("" + todayTime.getDate()).lpad("0", 2);
+        var year = todayTime.getFullYear() + 543;
+        $(".datepicker").val(day + "/" + month + "/" + year );
+
+        localStorage.setItem("MyDateBegin" ,'' );
+        localStorage.setItem("MyDateEnd" ,'' );
+        localStorage.setItem("MyRoomID" ,'' ); 
+        localStorage.setItem("MyRoomSelect" ,'' );
+        localStorage.setItem("MyPage" ,'' );
+        localStorage.setItem("MyTitle" ,'' );
+        $('#Page').val('')
+    })   
+    $('#submit').click(function(){
+             LoadData();
+    });   
+    });
+    function Paging(page) {
+        $('#Page').val(page);
+        LoadData();
+    }
+    function LoadData() {
+        localStorage.setItem("MyDateBegin", $('#dateBegin').val()+ ' ' + $('#timeBegin').val() );
+        localStorage.setItem("MyDateEnd", $('#dateEnd').val()+ ' ' + $('#timeEnd').val());
+        localStorage.setItem("MyRoomSelect", $('#Room').val());
+        localStorage.setItem("MyPerPage", $('#PerPage').val());
+        localStorage.setItem("MyPage", $('#Page').val()); 
+        localStorage.setItem("MyTitle" ,$('#Title').val());
+        var dateBeginSp =  (''+ ($('#dateBegin').val())).split('/')
+        $('#dateBeginPost').val(
+            (parseInt(dateBeginSp[2])-543) +        
+             "-"+
+             dateBeginSp[1] +
+             "-" +
+             dateBeginSp[0] +
+             " " +
+             $('#timeBegin').val()
+             );
+        var dateEndSp = (''+  ($('#dateEnd').val())).split('/')
+        $('#dateEndPost').val(
+            (parseInt(dateEndSp[2])-543) +        
+             "-"+
+             dateEndSp[1] +
+             "-" +
+             dateEndSp[0] +
+             " " +
+             $('#timeEnd').val()
+             );
+
+        url = $('#ListForm').attr('action');
+        $.post(url, $('#ListForm').serialize(), function (data) {
+            if (data.MyReserveList == null) {
+                $('#RetData').fadeOut(200,function(){
+                    $('#RetData').html('');
+                    $('#RetData').html(dataHtml);
+                });          
+                $('#Pagination,#Footer').fadeOut(200,function(){
+                    $('#Pagination').html('');
+                });  
+                return;
+            }
+            var dataHtml = '';
+            data.MyReserveList.forEach(dat => {
+                dataHtml+= `
+                <tr>
+                            <td valign="top" style=" cursor: pointer;">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h3 class="media-heading">`+ dat.Title + "[#" + dat.ID + `]</h3>
+                                        <p  >
+                                            <span  > <strong>ประธานการประชุม/วิทยากร &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.Lecturer + ` </span>
+                                            &nbsp;&nbsp;   &nbsp;&nbsp;
+                                            <strong >ห้อง &nbsp;&nbsp; : &nbsp;&nbsp;  `+ dat.RoomName + `  <i onclick="showRoom(`+dat.RoomID+`)" class="glyphicon glyphicon-list-alt"> </i> </strong>
+                                            <br>
+                                            <strong >สถานะ &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+
+                                           (dat.Status == 0 ? "<span class='label label-danger'> ยกเลิก </span>" : " <span  class='label label-success'  > ปกติ </span>") + `
+                                           &nbsp;&nbsp;  &nbsp;&nbsp;
+                                            <strong >วันที่จอง &nbsp;&nbsp; : &nbsp;&nbsp;   </strong> `+ dat.DateBegin    +`  - `+dat.DateEnd+`  </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td valign="top" style="cursor: pointer;vertical-align:middle;width:13%">
+                                    <i class="fa  fa-angle-right fa-w-8 fa-3x"></i>
+                            </td>
+                        </tr>
+                `;
+            });
+            
+            $('#RetData').fadeOut(200,function(){
+                $('#RetData').html('');
+                $('#RetData').html(dataHtml);
+            });          
+            $('#Pagination,#Footer').fadeOut(200,function(){
+                $('#Pagination').html('');
+            });      
+            $('#RetData').fadeIn(200,function(){
+              
+            });
+            $('#Pagination,#Footer').fadeIn(200,function(){
+                $('#Pagination').html(data.Paging);
+            });
+        });
+    }
+    function Reserve(el){
+       
+        localStorage.setItem("MyRoomID", $(el).attr("room"));
+        localStorage.setItem("MyRoomName", $(el).attr("room-name"));
+        localStorage.setItem("MyRoomImage", $(el).attr("room-image"));
+        localStorage.setItem("MyRoomSupport", $(el).attr("support"));      
+
+        window.location.href = '/reserve'
+    }
+    var parentHref = document.referrer;
+    if (parentHref != "" && localStorage.getItem("MyDateBegin")!=""){
+      
+       $('#dateBegin').val( localStorage.getItem("MyDateBegin").split(' ')[0]);
+       $('#timeBegin').val( localStorage.getItem("MyDateBegin").split(' ')[1]);
+       $('#dateEnd').val( localStorage.getItem("MyDateEnd").split(' ')[0]);
+       $('#timeEnd').val( localStorage.getItem("MyDateEnd").split(' ')[1]);
+       $('#Room').val( localStorage.getItem("MyRoomSelect"));
+       $('#PerPage').val( localStorage.getItem("MyPerPage"));
+       $('#Title').val( localStorage.getItem("MyTitle")); 
+    }
+    LoadData();
+</script>

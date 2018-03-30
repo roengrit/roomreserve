@@ -9,27 +9,27 @@ import (
 	"time"
 )
 
-//HomeController _
-type HomeController struct {
-	BaseNoAuthController
+//MyReserveController _
+type MyReserveController struct {
+	BaseController
 }
 
 //Get Home
-func (c *HomeController) Get() {
-	c.Data["title"] = "จองห้องประชุม"
-	c.Data["home"] = "active"
+func (c *MyReserveController) Get() {
+	c.Data["title"] = "รายการจองของฉััน"
+	c.Data["reserve_list"] = "active"
 	c.Data["err"] = c.Ctx.Request.URL.Query().Get("err")
 	c.Data["room"] = models.GetAllRoom()
 	c.Data["currentDate"] = time.Now().AddDate(543, 0, 0)
 	c.Layout = "layout.html"
-	c.TplName = "home/index.html"
+	c.TplName = "myreserve/index.html"
 	c.LayoutSections = make(map[string]string)
-	c.LayoutSections["scripts"] = "home/index-js.html"
+	c.LayoutSections["scripts"] = "myreserve/index-js.html"
 	c.Render()
 }
 
 //Post Home
-func (c *HomeController) Post() {
+func (c *MyReserveController) Post() {
 	searchTxt := c.Ctx.Request.FormValue("Title")
 	room := c.Ctx.Request.FormValue("Room")
 	status := c.Ctx.Request.FormValue("Status")
@@ -42,11 +42,11 @@ func (c *HomeController) Post() {
 	page = helpers.PrePaging(page)
 	offset := helpers.CalOffsetPaging(page, perPage)
 
-	ret := models.RoomReserveListJSON{}
-	num, list, _ := models.GetReserveList(uint(offset), uint(perPage), searchTxt, status, room, dateBegin, dateEnd)
+	ret := models.MyReserveListJSON{}
+	num, list, _ := models.GetMyReserveList(uint(offset), uint(perPage), searchTxt, status, room, dateBegin, dateEnd)
 
 	pn := helpers.NewPaging(page, perPage, num)
-	ret.RoomReserveList = &list
+	ret.MyReserveList = &list
 
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	t, _ := template.ParseFiles("views/paging.html")

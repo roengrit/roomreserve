@@ -1,0 +1,136 @@
+<style>
+    .table-striped>tbody>tr:nth-of-type(odd){
+        background-color: #f9f9f9;
+    }
+</style>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+</div>
+<div id="box-req">
+    <div class="box-body">
+        <h3 class="name" id="RoomName" style="margin-top: 5px;margin-bottom:20px;">{{if.m.HideTitle}} หัวข้อการประชุมเป็นความลับ {{else}} {{.m.Title}} {{end}} [#{{.m.ID}}]</h3>
+        <div class="row" style="padding:20px;">
+            <div class="table-responsive">
+                <table class="table  table-striped">
+                    <tbody>
+                        <tr >
+                            <td width="250">
+                                <strong>ห้องประชุม : </strong>
+                            </td>
+                            <td>{{.m.Room.Name}}</td>                             
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>วันที่ใช้ห้อง : </strong>
+                            </td>
+                            <td>
+                                <strong> </strong>
+                                {{if .m.DateBegin}}
+                                <span id="DateBeginText"> {{ date (.m.DateBegin | AddToThaiYear ) "d/m/Y"}} </span> เวลา
+                                <span id="TimeBeginText"> {{date .m.DateBegin "H:i"}} </span>
+                                {{else}}
+                                <span id="DateBeginText"> </span> เวลา
+                                <span id="TimeBeginText"> </span>
+                                {{end}}
+
+                                <strong> - </strong>
+                                {{if .m.DateBegin}}
+                                <span id="DateEndText"> {{date (.m.DateEnd | AddToThaiYear) "d/m/Y"}} </span> เวลา
+                                <span id="TimeEndText"> {{date .m.DateEnd "H:i"}} </span>
+                                {{else}}
+                                <span id="DateEndText"> </span> เวลา
+                                <span id="TimeEndText"> </span>
+                                {{end}}
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>ประธานการประชุม/วิทยากร : </strong>
+                            </td>
+                            <td>{{.m.Lecturer}}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>จำนวนผู้เข้าร่วมประชุม : </strong>
+                            </td>
+                            <td>{{.m.MemberCount}}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>ผู้เข้าประชุม [กรณีระบุได้] :</strong>
+                            </td>
+                            <td>{{.m.MemberText}}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>อุปกรณ์ที่ต้องการ : </strong>
+                            </td>
+                            <td>{{.m.DeviceAddOnText}}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>ผู้ประสานงาน/เบอร์โทร : </strong>
+                            </td>
+                            <td>{{.m.Coordinate}}</td>
+                        </tr>
+                        <tr>
+                                <td>
+                                    <strong>ผู้จอง</strong>
+                                </td>
+                                <td>
+                                     {{.m.Creator.Name}}
+                                </td>
+                            </tr>
+                        <tr>
+                            <td>
+                                <strong>สถานะ</strong>
+                            </td>
+                            <td>
+                                {{if .m.Status}}
+                                <span class='label label-success'> ปกติ </span>
+                                {{else}}
+                                <span class='label label-danger'> ยกเลิก </span>
+                                {{end}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="file-att-area"  >
+                    <h3 class="name" style="margin-top:15px;margin-bottom:20px;">ไฟล์แนบ</h3>
+                    <table class="no-border no-strip skills">
+                        <tbody class="no-border-x no-border-y" id="file-area">
+                            {{if .m.HideFile}}
+                                {{if .username}}
+                                    {{range $key, $val := .m.RoomReserveFile}}
+                                        <tr valign="top">
+                                            <td id='file-{{$val.ID}}'>
+                                                <a style="margin-right:15px;"  href="/reserve/dowload/{{$val.ID}}">{{$val.FileName}}</a>
+                                            </td>
+                                        </tr>
+                                    {{end}}
+                                {{else}}
+                                    {{range $key, $val := .m.RoomReserveFile}}
+                                    <tr valign="top">
+                                        <td id='file-{{$val.ID}}'>
+                                        {{$val.FileName}} 
+                                        </td>
+                                    </tr>
+                                    {{end}}
+                                {{end}}
+                            {{else }}
+                                {{range $key, $val := .m.RoomReserveFile}}
+                                    <tr valign="top">
+                                        <td id='file-{{$val.ID}}'>
+                                            <a style="margin-right:15px;"  href="/reserve/dowload/{{$val.ID}}">{{$val.FileName}}</a>
+                                        </td>
+                                    </tr>
+                                {{end}}
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+</div>

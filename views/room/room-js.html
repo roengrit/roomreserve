@@ -28,7 +28,7 @@
                 var imagePath = dat.ImagePath1 == '' || dat.ImagePath1 == undefined ? '/static/image/600_x_400.png' : dat.ImagePath1;
                 dataHtml+= `
                 <tr>
-                            <td valign="top" style=" cursor: pointer;">
+                            <td valign="top" style=" cursor: pointer;" onclick="showRoom(`+ dat.ID +`)">
                                 <div class="media">
                                     <div class="media-left" style="vertical-align:middle"  >
                                         <img class="respondsive" src="`+imagePath+`" style="width: 160px;">

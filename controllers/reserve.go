@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/go-playground/form"
 	"github.com/google/uuid"
 )
@@ -16,6 +17,11 @@ import (
 //ReserveController _
 type ReserveController struct {
 	BaseController
+}
+
+//ReserveViewController _
+type ReserveViewController struct {
+	beego.Controller
 }
 
 //Get -
@@ -40,6 +46,17 @@ func (c *ReserveController) Get() {
 	c.TplName = "reserve/reserve.html"
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["scripts"] = "reserve/reserve-js.html"
+	c.Render()
+}
+
+//View -
+func (c *ReserveViewController) View() {
+	c.Data["username"] = helpers.GetUser(c.Ctx.Request)
+	ID, _ := strconv.ParseInt(c.Ctx.Request.URL.Query().Get("id"), 10, 32)
+	c.Data["title"] = "รายละเอียดการจอง"
+	reserv, _ := models.GetReserveRoom(int(ID))
+	c.Data["m"] = reserv
+	c.TplName = "reserve/view.html"
 	c.Render()
 }
 
@@ -167,18 +184,23 @@ func (c *ReserveController) FileAtt() {
 }
 
 //FileDownload FileDownload
-func (c *ReserveController) FileDownload() {
-	id := c.Ctx.Input.Param(":id")
-	ID, _ := strconv.ParseInt(id, 10, 32)
-	actionUser, _ := models.GetUser(helpers.GetUser(c.Ctx.Request))
-	file, err := models.GetReserveFile(int(ID))
-	if err == nil {
-		reserve, err := models.GetReserveRoom(file.ReserveID)
+func (c *ReserveViewController) FileDownload() {
+	val := helpers.GetUser(c.Ctx.Request)
+	if val != "" {
+		id := c.Ctx.Input.Param(":id")
+		ID, _ := strconv.ParseInt(id, 10, 32)
+		actionUser, _ := models.GetUser(helpers.GetUser(c.Ctx.Request))
+		file, err := models.GetReserveFile(int(ID))
 		if err == nil {
-			if reserve.HideFile == 1 && actionUser.ID != 0 {
-				c.Ctx.Output.Download(file.FilePath1, file.FileName)
-			} else if reserve.HideFile == 0 {
-				c.Ctx.Output.Download(file.FilePath1, file.FileName)
+			reserve, err := models.GetReserveRoom(file.ReserveID)
+			if err == nil {
+				if reserve.HideFile == 1 && actionUser.ID != 0 {
+					if actionUser.ID == reserve.Creator.ID {
+						c.Ctx.Output.Download(file.FilePath1, file.FileName)
+					}
+				} else if reserve.HideFile == 0 {
+					c.Ctx.Output.Download(file.FilePath1, file.FileName)
+				}
 			}
 		}
 	}

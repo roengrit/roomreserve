@@ -46,13 +46,37 @@ String.prototype.rpad = function(padString, length) {
         $('#Title').val('')
         $('#timeBegin').timepicker('setTime', new Date(new Date().getTime()));
         $('#timeEnd').timepicker('setTime', new Date(new Date().getTime()));
+
         var todayTime = new Date();
         var month = ("" + (todayTime.getMonth() + 1)).lpad("0", 2);
         var day = ("" + todayTime.getDate()).lpad("0", 2);
         var year = todayTime.getFullYear() + 543;
         $(".datepicker").val(day + "/" + month + "/" + year );
+
+        localStorage.setItem("DateBegin" ,'' );
+        localStorage.setItem("DateEnd" ,'' );
+        localStorage.setItem("RoomID" ,'' ); 
+        localStorage.setItem("Status" ,'' );
+        localStorage.setItem("RoomSelect" ,'' );
+        localStorage.setItem("Page" ,'' );
+        $('#Page').val('')
     })   
     $('#submit').click(function(){
+             LoadData();
+    });   
+    });
+    function Paging(page) {
+        $('#Page').val(page);
+        LoadData();
+    }
+    function LoadData() {
+        localStorage.setItem("DateBegin", $('#dateBegin').val()+ ' ' + $('#timeBegin').val() );
+        localStorage.setItem("DateEnd", $('#dateEnd').val()+ ' ' + $('#timeEnd').val());
+        localStorage.setItem("RoomSelect", $('#Room').val());
+        localStorage.setItem("Status", $('#Status').val());
+        localStorage.setItem("PerPage", $('#PerPage').val());
+        localStorage.setItem("Page", $('#Page').val()); 
+
         var dateBeginSp =  (''+ ($('#dateBegin').val())).split('/')
         $('#dateBeginPost').val(
             (parseInt(dateBeginSp[2])-543) +        
@@ -73,14 +97,7 @@ String.prototype.rpad = function(padString, length) {
              " " +
              $('#timeEnd').val()
              );
-             LoadData();
-    });   
-    });
-    function Paging(page) {
-        $('#Page').val(page);
-        LoadData();
-    }
-    function LoadData() {
+
         url = $('#ListForm').attr('action');
         $.post(url, $('#ListForm').serialize(), function (data) {
             if (data.RoomReserveList == null) {
@@ -95,7 +112,7 @@ String.prototype.rpad = function(padString, length) {
             }
             var dataHtml = '';
             data.RoomReserveList.forEach(dat => {
-                var imagePath = dat.ImagePath1 == '' || dat.ImagePath1 == undefined ? '/static/image/600_x_400.png' : dat.ImagePath1;
+                var imagePath = dat.ImagePath1 == '' || dat.ImagePath1 == undefined ? '/static/image/600_x_400-view.png' : dat.ImagePath1;
                 dataHtml+= `
                 <tr>
                             <td valign="top" style=" cursor: pointer;">
@@ -123,16 +140,17 @@ String.prototype.rpad = function(padString, length) {
                                 </div>
                             </td>
                             ` + (dat.ReserveNumber == 0 && dat.Status == 1 ? `
-                                <td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%" onclick='Reserve(`+dat.ID+`)'>
+                                <td room="`+dat.ID+`" room-name="`+dat.Name+`" room-image="`+imagePath+`" support="`+dat.SupportText+`" reserve="`+dat.ReserveNumber+`"
+                                   class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%" onclick='Reserve(this)'>
                                     <i class="fa  fa-angle-right fa-w-8 fa-3x"></i>
                                 </td> 
                                 ` :  
                                 (  dat.ReserveNumber != 0 ?  
-                                `<td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%" onclick='ReserveView(`+dat.ID+`)'>
+                                `<td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%" onclick='reserveView(`+dat.ReserveNumber+`)'>
                                     <i class="fa   fa-file-text-o fa-w-8 fa-2x"></i>
                                 </td> ` 
                                 :                                
-                                `<td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%" onclick='RoomView(`+dat.ID+`)'>
+                                `<td class="text-center nowrap" style="cursor: pointer;vertical-align:middle;width:13%" onclick='showRoom(`+dat.ID+`)'>
                                     <i class="fa  fa-eye fa-w-8 fa-2x"></i>
                                 </td> 
                                 `)) +`
@@ -156,4 +174,26 @@ String.prototype.rpad = function(padString, length) {
             });
         });
     }
+    function Reserve(el){
+       
+        localStorage.setItem("RoomID", $(el).attr("room"));
+        localStorage.setItem("RoomName", $(el).attr("room-name"));
+        localStorage.setItem("RoomImage", $(el).attr("room-image"));
+        localStorage.setItem("RoomSupport", $(el).attr("support"));      
+
+        window.location.href = '/reserve'
+    }
+    var parentHref = document.referrer;
+    if (parentHref != "" && localStorage.getItem("DateBegin")!=""){
+      
+       $('#dateBegin').val( localStorage.getItem("DateBegin").split(' ')[0]);
+       $('#timeBegin').val( localStorage.getItem("DateBegin").split(' ')[1]);
+       $('#dateEnd').val( localStorage.getItem("DateEnd").split(' ')[0]);
+       $('#timeEnd').val( localStorage.getItem("DateEnd").split(' ')[1]);
+       $('#Room').val( localStorage.getItem("RoomSelect"));
+       $('#Status').val( localStorage.getItem("Status"));
+       $('#PerPage').val( localStorage.getItem("PerPage"));
+       $('#Page').val( localStorage.getItem("Page")); 
+    }
+    LoadData();
 </script>

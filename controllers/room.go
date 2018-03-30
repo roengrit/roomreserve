@@ -51,7 +51,8 @@ func (c *RoomReadController) Read() {
 	c.Data["m"] = room
 	c.Data["ret"] = models.RetModel{}
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
-	c.TplName = "room/read.html"
+	c.TplName = "room/view.html"
+	c.LayoutSections = make(map[string]string)
 	c.Render()
 }
 

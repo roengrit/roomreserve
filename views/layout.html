@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="/static/css/skins/_all-skins.min.css"> {{.html_head}}
   <link rel="stylesheet" href="/static/css/room.css">
   <link href="https://fonts.googleapis.com/css?family=Athiti|Kanit" rel="stylesheet">
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
 </head>
 <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
 
@@ -42,34 +44,47 @@
               <li class="{{.home}}">
                 <a href="/">จองห้องประชุม</a>
               </li>
+              {{if .username}}
+              <li class="{{.reserve_list}}">
+                <a href="/reserve/list">รายการจองของฉัน</a>
+              </li>
+              {{end}}
             </ul>
         </div>
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-              {{if .username}}
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">อื่นๆ
-                  <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                  <li>
-                    <a href="/room/list">ห้องประชุม</a>
-                  </li>
-                  <li>
-                    <a href="/user/list">ผู้ใช้งาน</a>
-                  </li>
-                  <li>
-                    <a href="/role/list">สิทธิ์</a>
-                  </li>
-                </ul>
-              </li>
+            {{if .username}}
+                  {{if (.room_manage) or (.role_manage) or (.user_manage)}}
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">อื่นๆ
+                        <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu" role="menu">
+                          {{if .room_manage }}
+                            <li>
+                              <a href="/room/list">จัดการห้องประชุม</a>
+                            </li>
+                         {{end}}
+                         {{if .user_manage }}
+                            <li>
+                              <a href="/user/list">ผู้ใช้งาน</a>
+                            </li>
+                         {{end}}
+                        {{if .role_manage }}
+                          <li>
+                            <a href="/role/list">สิทธิ์</a>
+                          </li>
+                        {{end}}
+                      </ul>
+                    </li>
+                  {{end}}
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <img src="{{.userimg}}" class="user-image"  >
                   <span class="hidden-xs">{{.username}}</span>
                   <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu" role="menu" style="margin-top:2px;">                  
+                <ul class="dropdown-menu" role="menu" style="margin-top:2px;padding:5px 0;">                  
                   <li>
                     <a href="/profile">โปรไฟล์</a>
                   </li>
@@ -131,22 +146,24 @@
       </div>
   </div>
   <div class="modal modal-default fade" id="room-global-modal">
-      <div class="modal-dialog" style="width:100%; height: 100%; margin: 0; padding: 0;">
-          <div class="modal-content"  style=" border-radius: 8px; ">
-              <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              </div>
+      <div class="modal-dialog" style="height: 100%;width:55%">
+          <div class="modal-content"  style=" border-radius: 8px; ">              
               <div  id="showroom">
                  
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal"> ปิด </button>
               </div>
           </div>
       </div>
   </div>
-   <script src="/static/js/jquery.min.js"></script>
-    <script src="/static/js/bootstrap.min.js"></script>
+  <div class="modal modal-default fade" id="reserve-global-modal">
+      <div class="modal-dialog" style="height: 100%;width:55%">
+          <div class="modal-content"  style=" border-radius: 8px; ">              
+              <div  id="reserve">
+                 
+              </div>
+          </div>
+      </div>
+  </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="/static/js/jquery.slimscroll.min.js"></script>
     <script src="/static/js/fastclick.js"></script>

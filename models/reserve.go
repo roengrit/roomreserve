@@ -25,6 +25,7 @@ type RoomReserve struct {
 	DateEnd         time.Time         `form:"-" orm:"null;"`
 	Remark          string            `orm:"size(300)"`
 	Room            *Room             `orm:"rel(fk)"`
+	RoomName        string            `orm:"-"`
 	Creator         *User             `orm:"rel(fk)"`
 	CreatedAt       time.Time         `orm:"auto_now_add;type(datetime)"`
 	Editor          *User             `orm:"null;rel(fk)"`
@@ -64,12 +65,41 @@ type RoomReserveResult struct {
 	HasReserve      bool
 }
 
-//RoomReserveListJSON RoomReserveListJSON
+//RoomReserveList _
+type RoomReserveList struct {
+	ID              int
+	DocNo           string
+	Lock            bool
+	Title           string
+	Lecturer        string
+	Coordinate      string
+	MemberText      string
+	MemberCount     int
+	DeviceAddOnText string
+	Status          int
+	HideTitle       int
+	HideFile        int
+	DateBegin       string
+	DateEnd         string
+	Remark          string
+	RoomName        string
+	RoomID          int
+}
+
+//RoomReserveListJSON -
 type RoomReserveListJSON struct {
 	RoomReserveList *[]RoomReserveResult
 	Paging          string
 	Page            uint
 	PerPage         uint
+}
+
+//MyReserveListJSON -
+type MyReserveListJSON struct {
+	MyReserveList *[]RoomReserveList
+	Paging        string
+	Page          uint
+	PerPage       uint
 }
 
 func init() {
@@ -199,4 +229,29 @@ func GetReserveList(currentPage, lineSize uint, term, status, room, beginDate, e
 	}
 	reserveListJSON = reserveListJSON[currentPage:lineSize]
 	return num, reserveListJSON, err
+}
+
+//GetMyReserveList -
+func GetMyReserveList(currentPage, lineSize uint, term, status, room, beginDate, endDate string) (num int64, myReserveListJSON []RoomReserveList, err error) {
+	o := orm.NewOrm()
+	var sql = ` select 
+					   to_char(	T0.date_begin + interval '543' year, 'DD/MM/YYYY HH:MI') as date_begin, 
+			           to_char(	T0.date_end + interval '543' year, 'DD/MM/YYYY HH:MI') as date_end,  
+						*,
+						T1.Name as room_name,
+						T1.I_D as room_i_d 
+				from  room_reserve T0 JOIN room T1 on T0.room_id = T1.i_d
+				where 1=1  AND ('` + beginDate + `' BETWEEN T0.date_begin AND T0.date_end  
+						   OR '` + endDate + `'    BETWEEN T0.date_begin AND T0.date_end)  `
+	num, _ = o.Raw(sql).QueryRows(&myReserveListJSON)
+	if lineSize+currentPage > uint(num) {
+		lineSize = uint(num)
+	} else if currentPage > 0 {
+		lineSize = lineSize + currentPage
+	}
+	if currentPage > lineSize {
+		currentPage = 0
+	}
+	myReserveListJSON = myReserveListJSON[currentPage:lineSize]
+	return num, myReserveListJSON, err
 }

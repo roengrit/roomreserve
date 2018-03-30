@@ -1,0 +1,102 @@
+<style>
+	.content-wrapper {
+		background-color: white;
+	}
+</style>
+<form action="/reserve/list" id="ListForm">
+
+	<input type="hidden" id="PerPage" name="PerPage" value="5" >
+	<input type="hidden" id="Page" name="Page" value="{{.Page}}" >
+
+	<input type="hidden" id="dateBeginPost" name="dateBeginPost" value="" >
+	<input type="hidden" id="dateEndPost" name="dateEndPost" value="" >
+	
+	<div class="row" style="margin-top:50px;">
+			{{if .err}}
+	    <div id="top-alert">
+			<div class="alert alert-danger alert-dismissible">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				{{ .err}}
+			</div>
+		</div>
+	{{end}}
+		<div class="col-xs-4">
+			<div class="input-group">
+				<div class="input-group-addon">
+					<i class="fa fa-calendar-o"></i>
+				</div>
+				<input type="text" class="form-control datepicker" id="dateBegin" name="dateBegin" data-provide="datepicker" value='{{date .currentDate "d/m/Y"}}' data-date-language="th-th"  >
+			</div>
+		</div>
+		<div class="col-xs-2">
+			<div class="input-group ">
+				<div class="input-group-addon">
+					<i class="fa fa-clock-o"></i>
+				</div>
+				<input type="text" id="timeBegin" value='{{date .currentDate "H:i"}}' class="form-control">
+			</div>
+		</div>
+		<div class="col-xs-4">
+			<div class="input-group">
+				<div class="input-group-addon">
+					<i class="fa fa-calendar-o"></i>
+				</div>
+				<input type="text" class="form-control datepicker" id="dateEnd" name="dateEnd" data-provide="datepicker" value='{{date .currentDate "d/m/Y"}}' data-date-language="th-th"  >
+			</div>
+		</div>
+		<div class="col-xs-2">
+			<div class="input-group">
+				<div class="input-group-addon">
+					<i class="fa fa-clock-o"></i>
+				</div>
+				<input type="text" id="timeEnd" value='{{date .currentDate "H:i"}}' class="form-control">
+
+			</div>
+		</div>
+	</div>
+	<div class="row " id="room-area" style="margin-top:10px;text-align:center; display:none;">
+		<div class="col-xs-6">
+			<select class="room" id="Room" name="Room">
+				<option value="">เลือกห้อง</option>
+				{{range $key, $val := .room}}
+					<option value="{{$val.ID}}" > {{$val.Name}} </option>
+				{{end}}   
+			</select>
+		</div>
+		<div  class="col-xs-6"  >
+				<input type="text" style="text-align:center" id="Title" name="Title"  placeholder="หัวข้อการประชุม" class="form-control">
+		</div>
+	</div>
+	<div id="button-area" class="row" style="margin-top:10px;text-align:center; display:none;">
+		<button type="button" id="submit"  class="btn btn-primary">
+			<i class="fa fa-filter"> </i> ค้นหา</button>
+		<button type="button" id="reset" class="btn btn-default">
+			<i class="fa fa-remove"> </i> ล้าง</button>
+	</div>
+	<div id="result-area" class="row" style="margin-top:70px; display:none;">
+		<div class="box-body table-responsive no-padding">
+			<table class="table table-hover">
+				<tbody id="RetData">
+					 
+				</tbody>
+			</table>
+		</div>
+		<div class="box-footer clearfix" id="Footer" style="display:none;">
+			<ul id="Pagination" class="pagination pagination-sm no-margin pull-right">
+				<li><a onclick="Paging('1')" href="javascript:void(0)">First</a></li>
+				<li><a onclick="Paging('{{.Pages.Prev}}')"  href="javascript:void(0)">Prev</a></li>
+				{{range .Pages.Pages 2 2}}
+					{{if eq . 0}}
+					<li><a class="disabled">...</a></li>
+					{{else if eq $.Pages.Page .}}
+					<li class="active">  <a class="active">{{.}}</a>		</li>		 
+					{{else}}
+					  <li > <a onclick="Paging('{{.}}')" href="javascript:void(0)">{{.}}</a></li>
+					{{end}}                    
+				{{end}}
+				<li><a onclick="Paging('{{.Pages.Next}}')" href="javascript:void(0)" >Next</a></li>
+				<li><a onclick="Paging('{{.Pages.MaxPage}}')" href="javascript:void(0)" >Last</a></li>
+			</ul>
+		</div>
+	</div>
+</form>
